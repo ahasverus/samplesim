@@ -12,7 +12,7 @@ install.packages('devtools')
 library(devtools)
 
 ### Install the samplesim package from GitHub
-devtools::install_github('ahasverus/SampleSim')
+devtools::install_github('ahasverus/SampleSim', build_vignettes = TRUE)
 
 ### Load the samplesim package
 library(SampleSim)
