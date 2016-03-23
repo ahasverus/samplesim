@@ -1,0 +1,2 @@
+?par
+switch(.Platform$OS.type, unix = {quartz()}, windows = {x11()})
