@@ -4,7 +4,7 @@ An R package for estimating sample size effects in stable isotope mixing solutio
 
 To install this package on R (or RStudio), you have to:
 
-```{r}
+```r
 ### Install the devtools package
 install.packages('devtools')
 
@@ -20,7 +20,7 @@ library(SampleSim)
 
 For the beginners, you can:
 
-```{r}
+```r
 ### See functions available in the package
 ls('package:SampleSim')
 
