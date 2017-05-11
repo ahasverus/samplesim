@@ -18,7 +18,7 @@ devtools::install_github("ahasverus/samplesim")
 library(samplesim)
 ```
 
-### Getting Started
+### Getting started
 
 ```r
 # List the content (objects and functions) of the < samplesim > package
