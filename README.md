@@ -33,3 +33,7 @@ help(plot_samplesim)
 # Open the vignette
 browseVignettes(package = 'samplesim')
 ```
+
+### Reference
+
+Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A. and Yoccoz N.G. <span style='color: #338c8c;'>How many is enough? An R package for evaluating the effect of sample size on estimates and precision of stable isotope mixing solutions</span>. <em>Methods in Ecology and Evolution</em>, submitted.

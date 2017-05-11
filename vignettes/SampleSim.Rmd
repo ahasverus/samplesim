@@ -146,7 +146,7 @@ data(rawPrey)
 head(rawPrey, 10)
 ```
 
-The function `samplesim::format_sources()` converts these raw data in the format of `dataPrey` by computing the mean and standard deviation of each isotope for each source. It is important to note that species can be grouped into sources (see below).
+The function `format_sources()` converts these raw data in the format of `dataPrey` by computing the mean and standard deviation of each isotope for each source. It is important to note that species can be grouped into sources (see below).
 
 ```{r, eval = TRUE, echo = TRUE}
 # List species names
@@ -162,7 +162,7 @@ levels(rawPrey$Species)
              Birds     = c('Melnig')))
 
 # Format preys data
-(dataPrey <- samplesim::format_sources(data = rawPrey, labels = src))
+(dataPrey <- format_sources(data = rawPrey, labels = src))
 ```
 
 - **Note:** even if preys species do not have to be grouped, their labels need to be stored in a list. For example:
@@ -237,7 +237,7 @@ samplesim(
            type = "one source",
            modwhich = 3,
            nsamples = c(5, 10, 25, 50, 75, 100, 250, 500, 750),
-           nrep = 100,
+           nrep = 500,
            interval = 90,
            name = 'simulation_1')
 ```
@@ -298,11 +298,14 @@ class(medians)
 dimnames(medians)
 ```
 
-These data are structured in a three dimensions array. If you want to extract results for the first replicate:
+These data are structured in a three dimensions array.
 
 ```{r, echo = TRUE, eval = TRUE}
 # Extract results of the first replicate
 medians[1, , ]
+
+# Compute mean over replicates
+apply(medians, 3:2, mean)
 ```
 
 
@@ -319,6 +322,15 @@ plot_samplesim(name = 'simulation_1')
 setwd(indir)
 ```
 
+Blabla
+
+```{r, echo = -c(1, 2, 5), eval = TRUE, fig.width = 7.1, fig.height = 7}
+indir <- getwd() ; setwd('~/Desktop')
+
+# Visualize results with default settings
+plot_samplesim(name = 'simulation_1', change = TRUE)
+setwd(indir)
+```
 
 # Reference {-}
 

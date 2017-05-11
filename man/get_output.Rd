@@ -29,7 +29,7 @@ If 'change' is TRUE, then the column replicate is omitted and results are aggreg
 }
 
 \references{
-Lecomte N.,Ehrich D., Casajus N., Berteaux D., Giroux M.-A., Yoccoz N.G. How many is enough? sample size and the outcome of stable isotope mixing models. Submitted in Methods in Ecology and Evolution.
+Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A., Yoccoz N.G. How many is enough? An R package for evaluating the effect of sample size on estimates and precision of stable isotope mixing solutions. Submitted in Methods in Ecology and Evolution.
 }
 
 \author{
