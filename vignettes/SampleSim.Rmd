@@ -1,13 +1,12 @@
 ---
-title: 'samplesim: an R package for estimating sample size effects in stable isotope mixing solutions'
-author: 'Nicolas Casajus, Nicolas Lecomte and Dorothee Ehrich'
-date: '`r Sys.Date()`'
+title: "samplesim: an R package for estimating sample size effects in stable isotope mixing solutions"
+author: "Nicolas Casajus, Nicolas Lecomte and Dorothee Ehrich"
+date: "`r Sys.Date()`"
 lang: french
 output:
   rmarkdown::html_vignette:
     toc: true
     number_sections: true
-    style: ".a {color:'red';}"
 vignette: >
   %\VignetteIndexEntry{An introduction of the package samplesim}
   %\VignetteEngine{knitr::rmarkdown}
@@ -23,7 +22,7 @@ devtools::build_vignettes()
 -->
 
 
-<style type="text/css">
+<style type = "text/css">
     body, p { line-height: 26px; font-size: 16px; }
     #TOC ul li, #TOC ul li ul li { line-height: 24px; font-size: 16px; list-style-type: none; }
     ul li, ul li ul li { list-style-type: disc; }
@@ -39,7 +38,7 @@ devtools::build_vignettes()
 
 
 
-<div style='margin-top:50px;'></div>
+<div style = "margin-top:50px;"></div>
 
 This package allows the investigation of the effect of sample size on estimates and precision of stable isotope mixing solutions calculated with the package [**siar**](https://cran.r-project.org/web/packages/siar/index.html). Samples sizes are modified assuming a normal distribution with a user defined mean and standard deviation. Samples of different sizes are created from this distribution, and mixing proportions are estimated for several replicates of each sample size using the function `siar::siarmcmcdirchletv4()` and default values for the MCMC.
 
@@ -52,13 +51,13 @@ The **samplesim** package is hosted on the GitHub platform  ([github.com/ahasver
 
 ```{r, eval = FALSE, echo = TRUE}
 # Install the < devtools > package
-install.packages('devtools', dependencies = TRUE)
+install.packages("devtools", dependencies = TRUE)
 
 # Load the < devtools > package
 library(devtools)
 
 # Install the < samplesim > package from GitHub
-devtools::install_github('ahasverus/samplesim', build_vignettes = TRUE)
+devtools::install_github("ahasverus/samplesim", build_vignettes = TRUE)
 
 # Load the < samplesim > package
 library(samplesim)
@@ -74,16 +73,16 @@ Once the **samplesim** package is loaded in your working environment, you can ty
 
 ```{r, eval = FALSE, echo = TRUE}
 # List the content (objects and functions) of the < samplesim > package
-ls('package:samplesim')
+ls("package:samplesim")
 
 # Open the < samplesim > package home page
-help(package = 'samplesim')
+help(package = "samplesim")
 
 # Open the help file of a specific function
 help(plot_samplesim)
 
 # Open the vignette (current document)
-browseVignettes(package = 'samplesim')
+browseVignettes(package = "samplesim")
 ```
 
 
@@ -154,12 +153,12 @@ levels(rawPrey$Species)
 
 # Group preys species into sources
 (src <- list(
-             Marine    = c('Ristri', 'Urilom'),
-             Reindeer  = c('Rantar'),
-             Voles     = c('Micoec'),
-             Lemming   = c('Lemlem'),
-             Ptarmigan = c('Laglag', 'Lagmut'),
-             Birds     = c('Melnig')))
+  Marine    = c("Ristri", "Urilom"),
+  Reindeer  = c("Rantar"),
+  Voles     = c("Micoec"),
+  Lemming   = c("Lemlem"),
+  Ptarmigan = c("Laglag", "Lagmut"),
+  Birds     = c("Melnig")))
 
 # Format preys data
 (dataPrey <- format_sources(data = rawPrey, labels = src))
@@ -169,7 +168,7 @@ levels(rawPrey$Species)
 
 ```{r, eval = TRUE, echo = TRUE}
 # Prey species names
-(species <- c('Marine', 'Birds', 'Voles'))
+(species <- c("Marine", "Birds", "Voles"))
 
 # R List conversion
 (src <- as.list(species))
@@ -204,15 +203,15 @@ The general writing of `samplesim()` is:
 
 ```{r, eval = FALSE}
 samplesim(
-           target,
-           sources,
-           type = NULL,
-           nsamples = NULL,
-           modwhich = NULL,
-           correct = NULL,
-           nrep = 100,
-           interval = 90,
-           name = NULL)
+  target,
+  sources,
+  type = NULL,
+  nsamples = NULL,
+  modwhich = NULL,
+  correct = NULL,
+  nrep = 100,
+  interval = 90,
+  name = NULL)
 ```
 
 with:
@@ -232,19 +231,19 @@ Let's take an example. We will assess the impacts of the sample size of one sour
 ```{r, eval = FALSE, echo = TRUE, message = FALSE}
 # samplesim run for one source
 samplesim(
-           target = dataConsumer,
-           source = dataPrey,
-           type = "one source",
-           modwhich = 3,
-           nsamples = c(5, 10, 25, 50, 75, 100, 250, 500, 750),
-           nrep = 500,
-           interval = 90,
-           name = 'simulation_1')
+  target = dataConsumer,
+  source = dataPrey,
+  type = "one source",
+  modwhich = 3,
+  nsamples = c(2, 5, 7, 10, 15, 25, 50, 75, 100, 250, 500, 750, 1000, 1500),
+  nrep = 500,
+  interval = 90,
+  name = "simulation_1")
 ```
 
 This function does not return any object in the R console. Instead, results are stored in the directory `simulation_1` and they will need to be imported for results visualization.
 
-- **Note:** if you want to estimate sample size impacts of all sources, you need to set `type = 'all source'`. If you want to assess the impact of the sample size of consumers, you have to set `type = 'consumer'`.
+- **Note:** if you want to estimate sample size impacts of all sources, you need to set `type = "all source"`. If you want to assess the impact of the sample size of consumers, you have to set `type = "consumer"`.
 
 
 # Results extraction
@@ -253,11 +252,11 @@ The `samplesim()` function has stored four objects results.
 
 ```{r, eval = FALSE, echo = TRUE}
 # Content of the new directory (results)
-dir('./simulation_1')
+dir("./simulation_1")
 ```
 
 ```{r, eval = TRUE, echo = FALSE}
-dir('~/Desktop/simulation_1')
+dir("~/Desktop/simulation_1")
 ```
 
 
@@ -273,8 +272,8 @@ A `logfile` is also written and contains all parameters of the simulation. Here'
 
 ```{r, echo = FALSE, eval = TRUE}
 # Import medians of credible intervals
-log <- readLines('~/Desktop/simulation_1/logfile.txt')
-cat(paste0(log, collapse = '\n'))
+log <- readLines("~/Desktop/simulation_1/logfile.txt")
+cat(paste0(log, collapse = "\n"))
 ```
 
 
@@ -282,12 +281,12 @@ Now, take a look at the results. We will first import the `medians` dataset usin
 
 ```{r, echo = TRUE, eval = FALSE}
 # Import medians of credible intervals
-medians <- readRDS('./simulation_1/medians.rds')
+medians <- readRDS("./simulation_1/medians.rds")
 ```
 
 ```{r, echo = FALSE, eval = TRUE}
 # Import medians of credible intervals
-medians <- readRDS('~/Desktop/simulation_1/medians.rds')
+medians <- readRDS("~/Desktop/simulation_1/medians.rds")
 ```
 
 ```{r, echo = TRUE, eval = TRUE}
@@ -315,26 +314,26 @@ Here, we want to represent the effects of sample size of the source _Voles_ on t
 
 
 ```{r, echo = -c(1, 2, 5), eval = TRUE, fig.width = 7.1, fig.height = 7}
-indir <- getwd() ; setwd('~/Desktop')
+indir <- getwd() ; setwd("~/Desktop")
 
 # Visualize results with default settings
-plot_samplesim(name = 'simulation_1')
+plot_samplesim(name = "simulation_1")
 setwd(indir)
 ```
 
 Blabla
 
 ```{r, echo = -c(1, 2, 5), eval = TRUE, fig.width = 7.1, fig.height = 7}
-indir <- getwd() ; setwd('~/Desktop')
+indir <- getwd() ; setwd("~/Desktop")
 
 # Visualize results with default settings
-plot_samplesim(name = 'simulation_1', change = TRUE)
+plot_samplesim(name = "simulation_1", change = TRUE)
 setwd(indir)
 ```
 
 # Reference {-}
 
-Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A. and Yoccoz N.G. <span style='color: #338c8c;'>How many is enough? An R package for evaluating the effect of sample size on estimates and precision of stable isotope mixing solutions</span>. <em>Methods in Ecology and Evolution</em>, submitted.
+Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A. and Yoccoz N.G. <span style = "color: #338c8c;">How many is enough? An R package for evaluating the effect of sample size on estimates and precision of stable isotope mixing solutions</span>. _Methods in Ecology and Evolution_, submitted.
 
 
-<div style='margin-bottom:50px;'></div>
+<div style = "margin-bottom:50px;"></div>
