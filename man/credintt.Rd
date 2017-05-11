@@ -1,9 +1,9 @@
 \name{credintt}
 
-\title{SampleSim internal function}
+\title{samplesim internal function}
 
 \description{
-SampleSim internal function.
+samplesim internal function.
 }
 
 \details{

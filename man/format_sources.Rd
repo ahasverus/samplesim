@@ -1,6 +1,6 @@
-\name{formatsources}
+\name{format_sources}
 
-\alias{formatsources}
+\alias{format_sources}
 
 \title{Format source data for stable isotope analysis}
 
@@ -9,7 +9,7 @@ This function computes mean and standard deviation of isotope concentrations fro
 }
 
 \usage{
-formatsources(data, labels)
+format_sources(data, labels)
 }
 
 \arguments{
@@ -33,16 +33,18 @@ Nicolas Casajus, Nicolas Lecomte, Dorothee Ehrich
 }
 
 \examples{
+# Import example dataset
 data(rawPrey)
 
 # Group similar preys
-src <- list(c("Ristri", "Urilom"), "Rantar", "Micoec", "Lemlem", c("Laglag", "Lagmut"), 
-"Melnig")
-
-# Name of sources
-names(src) <- c("Marine", "Reindeer", "Voles", "Lemming", "Ptarmigan", "Birds")
-src
+src <- list(
+  Marine    = c('Ristri', 'Urilom'),
+  Reindeer  = c('Rantar'),
+  Voles     = c('Micoec'),
+  Lemming   = c('Lemlem'),
+  Ptarmigan = c('Laglag', 'Lagmut'),
+  Birds     = c('Melnig'))
 
 # Format data
-(meansdiso <- formatsources(rawPrey, labels = src))
+(meansdiso <- format_sources(rawPrey, labels = src))
 }

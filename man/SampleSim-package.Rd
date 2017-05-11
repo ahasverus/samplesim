@@ -1,8 +1,8 @@
-\name{SampleSim-package}
+\name{samplesim-package}
 
-\alias{SampleSim-package}
+\alias{samplesim-package}
 
-\alias{SampleSim}
+\alias{samplesim}
 
 \docType{package}
 
@@ -16,10 +16,10 @@ This package allows the investigation of the effect of sample size on estimates 
 
 \details{
 \tabular{ll}{
-Package: \tab SampleSim\cr
+Package: \tab samplesim\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
-Date: \tab 2014-09-27\cr
+Date: \tab 2017-05-11\cr
 License: \tab GPL (>= 2)\cr
 }
 }
@@ -30,7 +30,7 @@ Nicolas Casajus, Nicolas Lecomte, Dorothee Ehrich
 Maintainer: Nicolas Casajus <nicolas.casajus@gmail.com>
 }
 \references{
-Lecomte N.,Ehrich D., Casajus N., Berteaux D., Giroux M.-A., Yoccoz N.G. How many is enough: sample size and the outcome of stable isotope mixing models. Submitted in Methods in Ecology and Evolution.
+Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A., Yoccoz N.G. How many is enough? An R package for evaluating the effect of sample size on estimates and precision of stable isotope mixing solutions. Submitted in Methods in Ecology and Evolution.
 }
 
 \seealso{

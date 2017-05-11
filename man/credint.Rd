@@ -1,9 +1,9 @@
 \name{credint}
 
-\title{SampleSim internal function}
+\title{samplesim internal function}
 
 \description{
-SampleSim internal function.}
+samplesim internal function.}
 
 \details{
 This function is a low level function. Not for a direct use.}

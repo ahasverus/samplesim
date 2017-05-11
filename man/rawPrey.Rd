@@ -24,19 +24,22 @@ A data frame with 97 observations on the following 3 variables:
 }
 
 \details{
-This dataset is not designed for a direct use by the function \code{\link{samplesim}}. The function \code{\link{formatsources}} converts these raw data in the samplesim standard (see \code{\link{dataPrey}} and the example below).
+This dataset is not designed for a direct use by the function \code{\link{samplesim}}. The function \code{\link{format_sources}} converts these raw data in the samplesim standard (see \code{\link{dataPrey}} and the example below).
 }
 
 \examples{
+# Import example dataset
 data(rawPrey)
 
 # Group similar preys
-src <- list(c("Ristri", "Urilom"), "Rantar", "Micoec", "Lemlem", c("Laglag", "Lagmut"),
-"Melnig")
-
-# Name of sources
-names(src) <- c("Marine", "Reindeer", "Voles", "Lemming", "Ptarmigan", "Birds")
+src <- list(
+  Marine    = c('Ristri', 'Urilom'),
+  Reindeer  = c('Rantar'),
+  Voles     = c('Micoec'),
+  Lemming   = c('Lemlem'),
+  Ptarmigan = c('Laglag', 'Lagmut'),
+  Birds     = c('Melnig'))
 
 # Format data
-(meansdiso <- formatsources(rawPrey, labels = src))
+(meansdiso <- format_sources(rawPrey, labels = src))
 }

@@ -1,35 +1,35 @@
-# SampleSim
+# samplesim
 
 An R package for estimating sample size effects in stable isotope mixing solutions
 
 To install this package on R (or RStudio), you have to:
 
 ```r
-### Install the devtools package
-install.packages('devtools')
+# Install the < devtools > package
+install.packages('devtools', dependencies = TRUE)
 
-### Load the devtools package
+# Load the < devtools > package
 library(devtools)
 
-### Install the samplesim package from GitHub
-devtools::install_github('ahasverus/SampleSim', build_vignettes = TRUE)
+# Install the < samplesim > package from GitHub
+devtools::install_github('ahasverus/samplesim', build_vignettes = TRUE)
 
-### Load the samplesim package
-library(SampleSim)
+# Load the < samplesim > package
+library(samplesim)
 ```
 
 For the beginners, you can:
 
 ```r
-### See functions available in the package
-ls('package:SampleSim')
+# List the content (objects and functions) of the < samplesim > package
+ls('package:samplesim')
 
-### See the package home page
-help(SampleSim)
+# Open the < samplesim > package home page
+help(samplesim)
 
-### See the help file of a specific function
-help(plotsamplesim)
+# Open the help file of a specific function
+help(plot_samplesim)
 
-### See the vignette
-vignette('SampleSim')
+# Open the vignette
+browseVignettes(package = 'samplesim')
 ```

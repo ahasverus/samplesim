@@ -1,9 +1,9 @@
 \name{meansd.nd}
 
-\title{SampleSim internal function}
+\title{samplesim internal function}
 
 \description{
-SampleSim internal function.
+samplesim internal function.
 }
 
 \details{

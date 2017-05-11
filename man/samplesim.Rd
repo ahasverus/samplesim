@@ -37,7 +37,7 @@ A logfile is also written and contains all parameters of the simulation.
 }
 
 \references{
-Lecomte N.,Ehrich D., Casajus N., Berteaux D., Giroux M.-A., Yoccoz N.G. How many is enough: sample size and the outcome of stable isotope mixing models. Submitted in Methods in Ecology and Evolution.
+Lecomte N.,Ehrich D., Casajus N., Berteaux D., Giroux M.-A., Yoccoz N.G. How many is enough? sample size and the outcome of stable isotope mixing models. Submitted in Methods in Ecology and Evolution.
 }
 
 \author{
@@ -45,7 +45,7 @@ Nicolas Casajush, Nicolas Lecomte, Dorothee Ehric
 }
 
 \seealso{
-\code{\link{formatsources}}, \code{\link{plotsamplesim}}, \code{\link[siar]{siarmcmcdirichletv4}}
+\code{\link{format_sources}}, \code{\link{plot_samplesim}}, \code{\link[siar]{siarmcmcdirichletv4}}
 }
 
 \examples{
@@ -54,14 +54,12 @@ data(dataPrey)
 data(dataConsumer)
 
 # Effect of sample size by modifying source 4
-samplesim(dataConsumer, dataPrey, type = "one source", nsamples = c(5, 10, 25),
-nrep = 10, modwhich = 4, name = "sim_1")
-
-# Import estimates data
-load("./sim_1/medians.Rdata")
-
-# Calculate mean estimates by sources and by sample size
-x <- NULL
-for (i in 1 : dim(medians)[3])
-x <-  rbind(x, apply(medians[ , , i], 2, mean))
+samplesim(
+  dataConsumer,
+  dataPrey,
+  type = "one source",
+  nsamples = c(5, 10, 25),
+  nrep = 10,
+  modwhich = 4,
+  name = "sim_1")
 }

@@ -1,38 +1,328 @@
 ---
-title: "Using the package SampleSim"
-author: "Nicolas Casajus, Nicolas Lecomte and Dorothee Ehrich"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+title: 'samplesim: an R package for estimating sample size effects in stable isotope mixing solutions'
+author: 'Nicolas Casajus, Nicolas Lecomte and Dorothee Ehrich'
+date: '`r Sys.Date()`'
+lang: french
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+    style: ".a {color:'red';}"
 vignette: >
-  %\VignetteIndexEntry{Using the package SampleSim}
+  %\VignetteIndexEntry{An introduction of the package samplesim}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-## Introduction
+<!--
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+library(devtools)
+setwd("/Users/nicolascasajus/Documents/samplesim")
+devtools::build_vignettes()
 
-## Handling arrays on R
+-->
 
-```{r, eval = FALSE}
-apply(medians, 3:2, mean)
+
+<style type="text/css">
+    body, p { line-height: 26px; font-size: 16px; }
+    #TOC ul li, #TOC ul li ul li { line-height: 24px; font-size: 16px; list-style-type: none; }
+    ul li, ul li ul li { list-style-type: disc; }
+    h1 { margin-top:50px; color: #338c8c; font-size: 28px;}
+    h2 { margin-top:25px; color: #338c8c; border-bottom-color: #338c8c; border-bottom-width: 2px; }
+    h4 { font-size: 16px; }
+    #TOC { margin-top: 25px; margin-bottom: 25px; }
+    pre, code { font-size: 13px; line-height: 20px; }
+    p { margin-top: 15px; }
+    a { color: #338c8c; }
+    p code, ul li code { color: #338c8c; font-weight: bold; }
+</style>
+
+
+
+<div style='margin-top:50px;'></div>
+
+This package allows the investigation of the effect of sample size on estimates and precision of stable isotope mixing solutions calculated with the package [**siar**](https://cran.r-project.org/web/packages/siar/index.html). Samples sizes are modified assuming a normal distribution with a user defined mean and standard deviation. Samples of different sizes are created from this distribution, and mixing proportions are estimated for several replicates of each sample size using the function `siar::siarmcmcdirchletv4()` and default values for the MCMC.
+
+
+# Package installation
+
+
+The **samplesim** package is hosted on the GitHub platform  ([github.com/ahasverus/samplesim](https://github.com/ahasverus/samplesim)). To install this package, you first need to install the **devtools** package from the CRAN. This package provides some useful functions such as the `install_github()` function which allows the installation of packages hosted in GitHub.
+
+
+```{r, eval = FALSE, echo = TRUE}
+# Install the < devtools > package
+install.packages('devtools', dependencies = TRUE)
+
+# Load the < devtools > package
+library(devtools)
+
+# Install the < samplesim > package from GitHub
+devtools::install_github('ahasverus/samplesim', build_vignettes = TRUE)
+
+# Load the < samplesim > package
+library(samplesim)
 ```
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+```{r, eval = TRUE, echo = FALSE}
+library(samplesim)
+```
 
-## Importing and formating datasets
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Once the **samplesim** package is loaded in your working environment, you can type some useful command lines.
 
-## Impact of sample size for one source
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+```{r, eval = FALSE, echo = TRUE}
+# List the content (objects and functions) of the < samplesim > package
+ls('package:samplesim')
 
-## Impact of sample size for all sources
+# Open the < samplesim > package home page
+help(samplesim)
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+# Open the help file of a specific function
+help(plot_samplesim)
 
-## Impact of sample size for consumer
+# Open the vignette (current document)
+browseVignettes(package = 'samplesim')
+```
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+# Data description
+
+Let's take a look at the data requirements. **samplesim** needs two type of data: one for the isotopic plasma values of the consumers (hereafter called `dataConsumer`) and one for the isotopic plasma values of the preys (hereafter called `dataPrey`).
+
+Datasets provided in this package come from Killengreen _et al._ (2011)[^1]
+
+[^1]: Killengreen S., Lecomte N., Ehrich D., Schott T., Yoccoz N.G. and Ims R.A. (2011) The importance of marine vs. human-induced subsidies in the maintenance of an expanding mesocarnivore in the arctic tundra. _Journal of Animal Ecology_, **80**, 1049-1060.
+
+
+## Consumers data {#consumers}
+
+The `dataConsumer` dataset contains the isotopic plasma values of the consumers over two isotopes. It must be structured in a data frame with two variables :
+
+- `d13C`, describing the plasma values of the d13C isotope
+- `d15N`, describing the plasma values of the d15N isotope
+
+Each row of the data frame corresponds to one consumer. Let's import the `dataConsumer` dataset available in the **samplesim** package.
+
+```{r, eval = TRUE, echo = TRUE}
+# Import isotopic plasma values of the consumers
+data(dataConsumer)
+
+# Print the first ten rows
+head(dataConsumer, 10)
+```
+
+
+
+## Preys data {#preys}
+
+The `dataPrey` dataset contains the isotopic plasma values of the preys over two isotopes. It must be structured in a data frame with five variables :
+
+- `Sources`, the name of the sources (preys or groups of preys)
+- `Meand13C`, the mean values of the d13C isotope
+- `SDd13C`, the standard deviation of the d13C isotope
+- `Meand15N`, the mean values of the d15N isotope
+- `SDd15N`, the standard deviation of the d15N isotope
+
+Each row of the data frame corresponds to one source (prey). Let's import the `dataPrey` dataset available in the **samplesim** package.
+
+```{r, eval = TRUE, echo = TRUE}
+# Import isotopic plasma values of the preys
+data(dataPrey)
+
+# Print the data frame content
+dataPrey
+```
+
+In some case, your data might look like the consumers dataset, _i.e._ a data frame with the isotopic plasma values of each individual prey. Let's import the `dataRaw` dataset available in the **samplesim** package to illustrate this point.
+
+
+```{r, eval = TRUE, echo = TRUE}
+# Import raw isotopic plasma values of the preys
+data(rawPrey)
+
+# Print the first ten rows
+head(rawPrey, 10)
+```
+
+The function `samplesim::format_sources()` converts these raw data in the format of `dataPrey` by computing the mean and standard deviation of each isotope for each source. It is important to note that species can be grouped into sources (see below).
+
+```{r, eval = TRUE, echo = TRUE}
+# List species names
+levels(rawPrey$Species)
+
+# Group preys species into sources
+(src <- list(
+             Marine    = c('Ristri', 'Urilom'),
+             Reindeer  = c('Rantar'),
+             Voles     = c('Micoec'),
+             Lemming   = c('Lemlem'),
+             Ptarmigan = c('Laglag', 'Lagmut'),
+             Birds     = c('Melnig')))
+
+# Format preys data
+(dataPrey <- samplesim::format_sources(data = rawPrey, labels = src))
+```
+
+- **Note:** even if preys species do not have to be grouped, their labels need to be stored in a list. For example:
+
+```{r, eval = TRUE, echo = TRUE}
+# Prey species names
+(species <- c('Marine', 'Birds', 'Voles'))
+
+# R List conversion
+(src <- as.list(species))
+
+# Name elements of the list
+names(src) <- species
+
+# Print list
+src
+```
+
+
+# Running samplesim
+
+Make sure your data have the following format:
+
+- Consumer dataset
+
+```{r, eval = TRUE, echo = FALSE}
+head(dataConsumer)
+```
+
+- Prey dataset
+
+```{r, eval = TRUE, echo = FALSE}
+head(dataPrey)
+```
+
+The core function of **samplesim** is `samplesim()`. It allows investigating the effect of sample size on estimates and precision of stable isotope mixing solutions. More specifically `samplesim()` assesses the sensitivity of isotopes mixing models to variation in numbers of samples from source tissues. This tool can be used prior to full-blown studies in a similar manner than power analyses. It used the function `siar::siarmcmcdirichletv4()` developed by Andrew Parnell and available in the package **siar**. User can choose to sample one particular source, or all the sources. User can also choose to modify consumer data. Sample sizes are modified assuming a normal distribution with a user defined mean and standard deviation. Samples of different sizes are created from this distribution, and mixing proportions are estimated for several replicates of each sample size.
+
+The general writing of `samplesim()` is:
+
+```{r, eval = FALSE}
+samplesim(
+           target,
+           sources,
+           type = NULL,
+           nsamples = NULL,
+           modwhich = NULL,
+           correct = NULL,
+           nrep = 100,
+           interval = 90,
+           name = NULL)
+```
+
+with:
+
+- `target`, the consumers dataset ([see Consumers data section](#consumers)).
+- `sources`, the preys dataset ([see Preys data section](#preys)).
+- `type`, the type of analysis to be run. Must be one of `one source`, `all sources` or `consumer`.
+- `nsamples`, the sample sizes to simulate.
+- `modwhich`, an integer indicating which source has to be modified.
+- `correct`, [optional] a data frame with discrimination values. See [**siar**](https://cran.r-project.org/web/packages/siar/index.html) for further details.
+- `nrep`, the number of replicates for each sample sizes.
+- `interval`, an integer indicating the width of credible interval to use for precision estimation.
+- `name`, the name of the simulation. If `NULL` the simulation will be named by the time of the simulation. This name will serve to create a directory in which results will be stored.
+
+Let's take an example. We will assess the impacts of the sample size of one source: the source \#3 (_Voles_) with several sample sizes (from 5 to 500). The analysis will be repeated 100 times.
+
+```{r, eval = FALSE, echo = TRUE, message = FALSE}
+# samplesim run for one source
+samplesim(
+           target = dataConsumer,
+           source = dataPrey,
+           type = "one source",
+           modwhich = 3,
+           nsamples = c(5, 10, 25, 50, 75, 100, 250, 500, 750),
+           nrep = 100,
+           interval = 90,
+           name = 'simulation_1')
+```
+
+This function does not return any object in the R console. Instead, results are stored in the directory `simulation_1` and they will need to be imported for results visualization.
+
+- **Note:** if you want to estimate sample size impacts of all sources, you need to set `type = 'all source'`. If you want to assess the impact of the sample size of consumers, you have to set `type = 'consumer'`.
+
+
+# Results extraction
+
+The `samplesim()` function has stored four objects results.
+
+```{r, eval = FALSE, echo = TRUE}
+# Content of the new directory (results)
+dir('./simulation_1')
+```
+
+```{r, eval = TRUE, echo = FALSE}
+dir('~/Desktop/simulation_1')
+```
+
+
+- `intervals`, a four dimensions array with the upper and lower bounds of the credible interval for each sample size, replicate and source. First dimension represents lower and upper bounds; second dimension corresponds to the number of sources; third dimension is the number of replicates; and fourth dimension is the number of sample size.
+
+- `widths`, a three dimensions array with the width (precision) of credible intervals for each source, each replicate and each sample size. First dimension corresponds to the number of replicates; second dimension is the number of sources; and third dimension represents the number of sample size.
+
+- `medians`, a three dimensions array with the median (estimate) of credible intervals for each source, each replicate and each sample size. Dimensions are the same as for `widths` object.
+
+- `datasets`, a four dimensions array with all resampled datasets.
+
+A `logfile` is also written and contains all parameters of the simulation. Here's what it looks like.
+
+```{r, echo = FALSE, eval = TRUE}
+# Import medians of credible intervals
+log <- readLines('~/Desktop/simulation_1/logfile.txt')
+cat(paste0(log, collapse = '\n'))
+```
+
+
+Now, take a look at the results. We will first import the `medians` dataset using the R function `readRDS()`.
+
+```{r, echo = TRUE, eval = FALSE}
+# Import medians of credible intervals
+medians <- readRDS('./simulation_1/medians.rds')
+```
+
+```{r, echo = FALSE, eval = TRUE}
+# Import medians of credible intervals
+medians <- readRDS('~/Desktop/simulation_1/medians.rds')
+```
+
+```{r, echo = TRUE, eval = TRUE}
+# Structure of the objects
+class(medians)
+
+# Names of the dimensions
+dimnames(medians)
+```
+
+These data are structured in a three dimensions array. If you want to extract results for the first replicate:
+
+```{r, echo = TRUE, eval = TRUE}
+# Extract results of the first replicate
+medians[1, , ]
+```
+
+
+# Results visualization
+
+Here, we want to represent the effects of sample size of the source _Voles_ on the width of the credible interval and on the median of the posterior distribution of the mixing models.
+
+
+```{r, echo = -c(1, 2, 5), eval = TRUE, fig.width = 7.1, fig.height = 7}
+indir <- getwd() ; setwd('~/Desktop')
+
+# Visualize results with default settings
+plot_samplesim(name = 'simulation_1')
+setwd(indir)
+```
+
+
+# Reference {-}
+
+Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A. and Yoccoz N.G. <span style='color: #338c8c;'>How many is enough? An R package for evaluating the effect of sample size on estimates and precision of stable isotope mixing solutions</span>. <em>Methods in Ecology and Evolution</em>, submitted.
+
+
+<div style='margin-bottom:50px;'></div>
