@@ -177,7 +177,7 @@ levels(rawPrey$Species)
 (src <- as.list(species))
 
 # Name elements of the list
-names(src) <- species
+names(src) <- species
 
 # Print list
 src
