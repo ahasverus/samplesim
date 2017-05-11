@@ -77,7 +77,7 @@ Once the **samplesim** package is loaded in your working environment, you can ty
 ls('package:samplesim')
 
 # Open the < samplesim > package home page
-help(samplesim)
+help(package = 'samplesim')
 
 # Open the help file of a specific function
 help(plot_samplesim)
