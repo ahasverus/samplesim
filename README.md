@@ -1,4 +1,5 @@
 [![Travis](https://travis-ci.org/ahasverus/samplesim.svg?branch=master)](https://travis-ci.org/ahasverus/samplesim)
+[![codecov](https://codecov.io/gh/ahasverus/samplesim/branch/master/graph/badge.svg)](https://codecov.io/gh/ahasverus/samplesim)
 
 # samplesim
 
