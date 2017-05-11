@@ -2,7 +2,7 @@
 
 An R package for estimating sample size effects in stable isotope mixing solutions
 
-To install this package on R (or RStudio), you have to:
+### Installation
 
 ```r
 # Install the < devtools > package
@@ -18,7 +18,7 @@ devtools::install_github('ahasverus/samplesim')
 library(samplesim)
 ```
 
-For the beginners, you can:
+### Getting Started
 
 ```r
 # List the content (objects and functions) of the < samplesim > package
