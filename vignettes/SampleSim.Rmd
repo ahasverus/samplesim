@@ -112,6 +112,7 @@ data(dataConsumer)
 head(dataConsumer, 10)
 ```
 
+**Important:** make sure that column names are spelled such as in the above example.
 
 
 ## Preys data {#preys}
@@ -133,6 +134,8 @@ data(dataPrey)
 # Print the data frame content
 dataPrey
 ```
+
+**Important:** make sure that column names are spelled such as in the above example.
 
 In some case, your data might look like the consumers dataset, _i.e._ a data frame with the isotopic plasma values of each individual prey. Let's import the `dataRaw` dataset available in the **samplesim** package to illustrate this point.
 
@@ -197,6 +200,8 @@ head(dataConsumer)
 head(dataPrey)
 ```
 
+**Important:** make sure that column names are spelled such as in the above examples.
+
 The core function of **samplesim** is `samplesim()`. It allows investigating the effect of sample size on estimates and precision of stable isotope mixing solutions. More specifically `samplesim()` assesses the sensitivity of isotopes mixing models to variation in numbers of samples from source tissues. This tool can be used prior to full-blown studies in a similar manner than power analyses. It used the function `siar::siarmcmcdirichletv4()` developed by Andrew Parnell and available in the package **siar**. User can choose to sample one particular source, or all the sources. User can also choose to modify consumer data. Sample sizes are modified assuming a normal distribution with a user defined mean and standard deviation. Samples of different sizes are created from this distribution, and mixing proportions are estimated for several replicates of each sample size.
 
 The general writing of `samplesim()` is:
@@ -226,7 +231,7 @@ with:
 - `interval`, an integer indicating the width of credible interval to use for precision estimation.
 - `name`, the name of the simulation. If `NULL` the simulation will be named by the time of the simulation. This name will serve to create a directory in which results will be stored.
 
-Let's take an example. We will assess the impacts of the sample size of one source: the source \#3 (_Voles_) with several sample sizes (from 5 to 500). The analysis will be repeated 100 times.
+Let's take an example. We will assess the impacts of the sample size of one source: the source \#3 (_Voles_) with several sample sizes (from 2 to 250). The analysis will be repeated 500 times.
 
 ```{r, eval = FALSE, echo = TRUE, message = FALSE}
 # samplesim run for one source
@@ -235,7 +240,7 @@ samplesim(
   source = dataPrey,
   type = "one source",
   modwhich = 3,
-  nsamples = c(2, 5, 7, 10, 15, 25, 50, 75, 100, 250, 500, 750, 1000, 1500),
+  nsamples = c(2:10, 15, 25, 50, 75, 100, 250),
   nrep = 500,
   interval = 90,
   name = "simulation_1")
