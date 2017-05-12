@@ -2,7 +2,7 @@ Package: samplesim
 Type: Package
 Title: Sample size effects in stable isotope mixing solutions
 Version: 1.0
-Date: 2014-09-27
+Date: 2017-05-12
 Author: Nicolas Casajus, Nicolas Lecomte, Dorothee Ehrich
 Maintainer: Nicolas Casajus <nicolas.casajus@gmail.com>
 Description: This package allows the investigation of the effect of sample size on estimates and precision of stable isotope mixing solutions calculated with the package siar (written by Andrew Parnell et al.). Sample sizes are modified assuming a normal distribution with a user defined mean and standard deviation. Samples of different sizes are created from this distribution, and mixing proportions are estimated for several replicates of each sample size using the function siarmcmcdirchletv4 (package siar) and default values for the MCMC. Authors thank Rolf Ims for his contribution.
