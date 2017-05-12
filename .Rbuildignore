@@ -1,5 +1,1 @@
 ^\.travis\.yml$
-^codecov\.yml$
-^appveyor\.yml$
-^.*\.Rproj$
-^\.Rproj\.user$

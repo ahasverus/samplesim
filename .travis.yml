@@ -1,8 +1,12 @@
 language: r
+
+cache: packages
+
 sudo: required
 
-r_packages:
-  - covr
+warnings_are_errors: false
 
-after_success:
-  - Rscript -e 'library(covr); codecov()'
+notifications:
+  email:
+    recipients:
+      - nicolas.casajus@gmail.com

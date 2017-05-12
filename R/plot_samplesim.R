@@ -94,9 +94,9 @@ function(name = "simulation_1", change = FALSE, reference = NULL){
 
   if (change){
     print(
-      ggplot(data = tab, aes(x = size, y = value, group = source)) +
-        geom_point(aes(color = source), position = position_dodge(0)) +
-        geom_line(aes(color = source), position = position_dodge(0)) +
+      ggplot(aes_string(x = 'size', y = 'value', group = 'source'), data = tab) +
+        geom_point(aes_string(color = 'source'), data = tab, position = position_dodge(0)) +
+        geom_line(aes_string(color = 'source'), data = tab, position = position_dodge(0)) +
         labs(x = "Sample size", y = "Change in values (%)", color = "Sources") +
         theme_light() +
         theme(legend.position = "bottom") +
@@ -106,8 +106,8 @@ function(name = "simulation_1", change = FALSE, reference = NULL){
     )
   } else {
     print(
-      ggplot(data = tab, aes(x = size, y = value)) +
-        geom_boxplot(aes(color = source), width = 1.0, outlier.shape = NA) +
+      ggplot(aes_string(x = 'size', y = 'value'), data = tab) +
+        geom_boxplot(aes_string(color = 'source'), data = tab, width = 1.0, outlier.shape = NA) +
         labs(x = "Sample size", y = "Values", color = "Sources") +
         coord_cartesian(ylim = c(0, max(tab$value))) +
         theme_light() +
