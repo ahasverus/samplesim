@@ -7,7 +7,7 @@
 \title{Preys plasma data}
 
 \description{
-A 5 column and 6 row data frame which contains the isotopic plasma values of 6 preys (sources) over mean and standard deviation values of 2 isotopes.
+A 5 column and 6 row data frame which contains the isotopic plasma values of 6 preys (sources) over mean and standard deviation values of 2 isotopes. Data come from Killengreen et al. (2011).
 }
 
 \usage{
@@ -27,6 +27,10 @@ A data frame with 6 observations on the following 5 variables:
 
 \details{
 This dataset is designed for a direct use by the function \code{\link{samplesim}}.
+}
+
+\references{
+Killengreen S., Lecomte N., Ehrich D., Schott T., Yoccoz N.G. and Ims R.A. (2011) The importance of marine vs. human-induced subsidies in the maintenance of an expanding mesocarnivore in the arctic tundra. Journal of Animal Ecology, 80, 1049-1060.
 }
 
 \examples{
