@@ -57,7 +57,7 @@ install.packages("devtools", dependencies = TRUE)
 library(devtools)
 
 # Install the < samplesim > package from GitHub
-devtools::install_github("ahasverus/samplesim")
+devtools::install_github("ahasverus/samplesim", build_vignettes = TRUE)
 
 # Load the < samplesim > package
 library(samplesim)
