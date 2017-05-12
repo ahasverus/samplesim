@@ -27,7 +27,7 @@ Nicolas Casajus, Nicolas Lecomte, Dorothee Ehrich
 }
 
 \seealso{
-\code{\link{samplesim}}, \code{\link{get_output}},
+\code{\link{samplesim}}, \code{\link{get_output}}
 }
 
 \examples{

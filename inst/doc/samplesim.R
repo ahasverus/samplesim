@@ -6,7 +6,7 @@
 #  library(devtools)
 #  
 #  # Install the < samplesim > package from GitHub
-#  devtools::install_github("ahasverus/samplesim", build_vignettes = TRUE)
+#  devtools::install_github("ahasverus/samplesim")
 #  
 #  # Load the < samplesim > package
 #  library(samplesim)
@@ -72,7 +72,7 @@ levels(rawPrey$Species)
 (src <- as.list(species))
 
 # Name elements of the list
-names(src) <- species
+names(src) <- species
 
 # Print list
 src
@@ -83,7 +83,7 @@ head(dataConsumer)
 ## ---- eval = TRUE, echo = FALSE------------------------------------------
 head(dataPrey)
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE, echo = TRUE------------------------------------------
 #  samplesim(
 #    target,
 #    sources,
@@ -102,37 +102,36 @@ head(dataPrey)
 #    source = dataPrey,
 #    type = "one source",
 #    modwhich = 3,
-#    nsamples = c(2, 5, 7, 10, 15, 25, 50, 75, 100, 250, 500, 750, 1000, 1500),
+#    nsamples = c(2:10, 15, 25, 50, 75, 100, 250),
 #    nrep = 500,
 #    interval = 90,
 #    name = "simulation_1")
 
-## ---- eval = FALSE, echo = TRUE------------------------------------------
-#  # Content of the new directory (results)
-#  dir("./simulation_1")
-
-## ---- eval = TRUE, echo = FALSE------------------------------------------
-dir("~/Desktop/simulation_1")
+## ---- eval = TRUE, echo = TRUE-------------------------------------------
+# Content of the new directory (results)
+dir("simulation_1")
 
 ## ---- echo = FALSE, eval = TRUE------------------------------------------
 # Import medians of credible intervals
-log <- readLines("~/Desktop/simulation_1/logfile.txt")
+log <- readLines("simulation_1/logfile.txt")
 cat(paste0(log, collapse = "\n"))
 
-## ---- echo = TRUE, eval = FALSE------------------------------------------
-#  # Import medians of credible intervals
-#  medians <- readRDS("./simulation_1/medians.rds")
-
-## ---- echo = FALSE, eval = TRUE------------------------------------------
+## ---- echo = TRUE, eval = TRUE-------------------------------------------
 # Import medians of credible intervals
-medians <- readRDS("~/Desktop/simulation_1/medians.rds")
+medians <- readRDS("simulation_1/medians.rds")
 
 ## ---- echo = TRUE, eval = TRUE-------------------------------------------
-# Structure of the objects
+# Structure of the object
 class(medians)
 
 # Names of the dimensions
-dimnames(medians)
+names(dimnames(medians))
+
+# Names of the content of the second dimension
+dimnames(medians)[[2]]
+
+# Names of the content of the third dimension
+dimnames(medians)[[3]]
 
 ## ---- echo = TRUE, eval = TRUE-------------------------------------------
 # Extract results of the first replicate
@@ -141,17 +140,75 @@ medians[1, , ]
 # Compute mean over replicates
 apply(medians, 3:2, mean)
 
-## ---- echo = -c(1, 2, 5), eval = TRUE, fig.width = 7.1, fig.height = 4.5----
-indir <- getwd() ; setwd("~/Desktop")
+## ---- echo = TRUE, eval = TRUE-------------------------------------------
+# Import medians and widths of credible intervals
+datas <- get_output("simulation_1")
 
-# Visualize results with default settings
+# Structure of the data frame
+str(datas)
+
+# Print the first ten and last ten rows
+rbind(head(datas, 10), tail(datas, 10))
+
+## ---- echo = TRUE, eval = TRUE-------------------------------------------
+# Import medians of credible intervals
+widths <- datas[datas$type == "Width of credible intervals", ]
+
+# Check
+rbind(head(widths, 10), tail(widths, 10))
+
+## ---- echo = TRUE, eval = TRUE-------------------------------------------
+# Import medians and widths of credible intervals expressed as percentage of change
+datas <- get_output("simulation_1", change = TRUE, reference = 2)
+
+# Structure of the data frame
+str(datas)
+
+# Print the first ten and last ten rows
+rbind(head(datas, 10), tail(datas, 10))
+
+## ---- echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5--------
+# Visualize results
 plot_samplesim(name = "simulation_1")
-setwd(indir)
 
-## ---- echo = -c(1, 2, 5), eval = TRUE, fig.width = 7.1, fig.height = 4.5----
-indir <- getwd() ; setwd("~/Desktop")
+## ---- echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5--------
+# Visualize results expressed as percentages of change
+plot_samplesim(name = "simulation_1", change = TRUE, reference = 2)
 
-# Visualize results with default settings
-plot_samplesim(name = "simulation_1", change = TRUE)
-setwd(indir)
+## ---- echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5--------
+# Import medians and widths of credible intervals
+datas <- get_output("simulation_1")
+
+# Reminder #1
+head(datas)
+
+# Reminder #2
+tail(datas)
+
+# Graph
+ggplot(aes(x = size, y = value), data = datas) +
+  geom_boxplot(aes(fill = source), width = 0.8, outlier.shape = NA) +
+  labs(x = "Sample size", y = "Values", fill = "Sources") +
+  theme(legend.position = "bottom") +
+  theme(legend.title = element_blank()) +
+  facet_grid(. ~ type)
+
+## ---- echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5--------
+# Import medians and widths of credible intervals
+datas <- get_output("simulation_1", change = TRUE)
+
+# Select medians of credible intervals
+medians <- datas[datas$type == "Median of posterior distribution", ]
+
+# Print data
+head(medians)
+
+# Graph
+ggplot(aes(x = size, y = value, group = source), data = medians) +
+  geom_point(aes(color = source)) +
+  geom_line(aes(color = source)) +
+  labs(x = "Sample size", y = "Change in medians (%)", color = "Sources") +
+  theme_light() +
+  theme(legend.position = "bottom") +
+  theme(legend.title = element_blank())
 

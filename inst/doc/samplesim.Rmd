@@ -57,7 +57,7 @@ install.packages("devtools", dependencies = TRUE)
 library(devtools)
 
 # Install the < samplesim > package from GitHub
-devtools::install_github("ahasverus/samplesim", build_vignettes = TRUE)
+devtools::install_github("ahasverus/samplesim")
 
 # Load the < samplesim > package
 library(samplesim)
@@ -68,7 +68,7 @@ library(samplesim)
 ```
 
 
-Once the **samplesim** package is loaded in your working environment, you can type some useful command lines.
+Once the **samplesim** package is loaded in your working environment, you can type some useful command lines to get started.
 
 
 ```{r, eval = FALSE, echo = TRUE}
@@ -97,7 +97,7 @@ Datasets provided in this package come from Killengreen _et al._ (2011)[^1]
 
 ## Consumers data {#consumers}
 
-The `dataConsumer` dataset contains the isotopic plasma values of the consumers over two isotopes. It must be structured in a data frame with two variables :
+The `dataConsumer` dataset contains the isotopic plasma values of the consumers over two isotopes. It must be structured in a data frame with at least two variables (one by isotope):
 
 - `d13C`, describing the plasma values of the d13C isotope
 - `d15N`, describing the plasma values of the d15N isotope
@@ -112,6 +112,7 @@ data(dataConsumer)
 head(dataConsumer, 10)
 ```
 
+- **Important:** make sure that column names are spelled such as in the above example.
 
 
 ## Preys data {#preys}
@@ -124,7 +125,7 @@ The `dataPrey` dataset contains the isotopic plasma values of the preys over two
 - `Meand15N`, the mean values of the d15N isotope
 - `SDd15N`, the standard deviation of the d15N isotope
 
-Each row of the data frame corresponds to one source (prey). Let's import the `dataPrey` dataset available in the **samplesim** package.
+Each row of the data frame corresponds to one source (prey or group of preys). Let's import the `dataPrey` dataset available in the **samplesim** package.
 
 ```{r, eval = TRUE, echo = TRUE}
 # Import isotopic plasma values of the preys
@@ -133,6 +134,8 @@ data(dataPrey)
 # Print the data frame content
 dataPrey
 ```
+
+- **Important:** make sure that column names are spelled such as in the above example.
 
 In some case, your data might look like the consumers dataset, _i.e._ a data frame with the isotopic plasma values of each individual prey. Let's import the `dataRaw` dataset available in the **samplesim** package to illustrate this point.
 
@@ -174,7 +177,7 @@ levels(rawPrey$Species)
 (src <- as.list(species))
 
 # Name elements of the list
-names(src) <- species
+names(src) <- species
 
 # Print list
 src
@@ -183,7 +186,7 @@ src
 
 # Running samplesim
 
-Make sure your data have the following format:
+Make sure your data have the following format and the same column names:
 
 - Consumer dataset
 
@@ -201,7 +204,7 @@ The core function of **samplesim** is `samplesim()`. It allows investigating the
 
 The general writing of `samplesim()` is:
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 samplesim(
   target,
   sources,
@@ -226,7 +229,7 @@ with:
 - `interval`, an integer indicating the width of credible interval to use for precision estimation.
 - `name`, the name of the simulation. If `NULL` the simulation will be named by the time of the simulation. This name will serve to create a directory in which results will be stored.
 
-Let's take an example. We will assess the impacts of the sample size of one source: the source \#3 (_Voles_) with several sample sizes (from 5 to 500). The analysis will be repeated 100 times.
+Let's take an example. We will assess the impact of the sample size of one source: the source \#3 (_Voles_) with several sample sizes (from 2 to 250). The analysis will be repeated 500 times.
 
 ```{r, eval = FALSE, echo = TRUE, message = FALSE}
 # samplesim run for one source
@@ -235,30 +238,25 @@ samplesim(
   source = dataPrey,
   type = "one source",
   modwhich = 3,
-  nsamples = c(2, 5, 7, 10, 15, 25, 50, 75, 100, 250, 500, 750, 1000, 1500),
+  nsamples = c(2:10, 15, 25, 50, 75, 100, 250),
   nrep = 500,
   interval = 90,
   name = "simulation_1")
 ```
 
-This function does not return any object in the R console. Instead, results are stored in the directory `simulation_1` and they will need to be imported for results visualization.
+This function does not return any object in the R console. Instead, results are stored in the directory `simulation_1` and they will need to be imported for results visualization ([see below section](#results)).
 
 - **Note:** if you want to estimate sample size impacts of all sources, you need to set `type = "all source"`. If you want to assess the impact of the sample size of consumers, you have to set `type = "consumer"`.
 
 
-# Results extraction
+# Results extraction {#results}
 
 The `samplesim()` function has stored four objects results.
 
-```{r, eval = FALSE, echo = TRUE}
+```{r, eval = TRUE, echo = TRUE}
 # Content of the new directory (results)
-dir("./simulation_1")
+dir("simulation_1")
 ```
-
-```{r, eval = TRUE, echo = FALSE}
-dir("~/Desktop/simulation_1")
-```
-
 
 - `intervals`, a four dimensions array with the upper and lower bounds of the credible interval for each sample size, replicate and source. First dimension represents lower and upper bounds; second dimension corresponds to the number of sources; third dimension is the number of replicates; and fourth dimension is the number of sample size.
 
@@ -272,29 +270,30 @@ A `logfile` is also written and contains all parameters of the simulation. Here'
 
 ```{r, echo = FALSE, eval = TRUE}
 # Import medians of credible intervals
-log <- readLines("~/Desktop/simulation_1/logfile.txt")
+log <- readLines("simulation_1/logfile.txt")
 cat(paste0(log, collapse = "\n"))
 ```
 
 
-Now, take a look at the results. We will first import the `medians` dataset using the R function `readRDS()`.
+Now, let's take a look at the results and import the `medians` dataset using the R function `readRDS()`.
 
-```{r, echo = TRUE, eval = FALSE}
+```{r, echo = TRUE, eval = TRUE}
 # Import medians of credible intervals
-medians <- readRDS("./simulation_1/medians.rds")
-```
-
-```{r, echo = FALSE, eval = TRUE}
-# Import medians of credible intervals
-medians <- readRDS("~/Desktop/simulation_1/medians.rds")
+medians <- readRDS("simulation_1/medians.rds")
 ```
 
 ```{r, echo = TRUE, eval = TRUE}
-# Structure of the objects
+# Structure of the object
 class(medians)
 
 # Names of the dimensions
-dimnames(medians)
+names(dimnames(medians))
+
+# Names of the content of the second dimension
+dimnames(medians)[[2]]
+
+# Names of the content of the third dimension
+dimnames(medians)[[3]]
 ```
 
 These data are structured in a three dimensions array.
@@ -307,29 +306,108 @@ medians[1, , ]
 apply(medians, 3:2, mean)
 ```
 
+The structure of the `widths` dataset is the same as for `medians`.
+
+If you are uncomfortable to deal with three dimensions arrays, you can use the function `get_output()` of the **samplesim** package. This function converts these two arrays (i.e. `medians` and `widths`) into an unique data frame.
+For instance:
+
+```{r, echo = TRUE, eval = TRUE}
+# Import medians and widths of credible intervals
+datas <- get_output("simulation_1")
+
+# Structure of the data frame
+str(datas)
+
+# Print the first ten and last ten rows
+rbind(head(datas, 10), tail(datas, 10))
+```
+
+If you want to select only the `widths` data,
+
+```{r, echo = TRUE, eval = TRUE}
+# Import medians of credible intervals
+widths <- datas[datas$type == "Width of credible intervals", ]
+
+# Check
+rbind(head(widths, 10), tail(widths, 10))
+```
+
+The argument _change_ of the function `get_output()` allows to compute the percentage of change of medians and widths respectively, based on a value of sample size (argument _reference_; default is the minimum sample size). For instance,
+
+```{r, echo = TRUE, eval = TRUE}
+# Import medians and widths of credible intervals expressed as percentage of change
+datas <- get_output("simulation_1", change = TRUE, reference = 2)
+
+# Structure of the data frame
+str(datas)
+
+# Print the first ten and last ten rows
+rbind(head(datas, 10), tail(datas, 10))
+```
+
+Here we notice that the column replicate is omitted and percentages of change are aggregated over replicates.
 
 # Results visualization
 
-Here, we want to represent the effects of sample size of the source _Voles_ on the width of the credible interval and on the median of the posterior distribution of the mixing models.
+The **samplesim** package also offers the possibility of visualizing the effect of sample size on the width of the credible interval and on the median of the posterior distribution of the mixing models. This is possible with the function `plot_samplesim()`.
 
 
-```{r, echo = -c(1, 2, 5), eval = TRUE, fig.width = 7.1, fig.height = 4.5}
-indir <- getwd() ; setwd("~/Desktop")
-
-# Visualize results with default settings
+```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+# Visualize results
 plot_samplesim(name = "simulation_1")
-setwd(indir)
 ```
 
-Blabla
+If you prefer you can represent the percentages of change:
 
-```{r, echo = -c(1, 2, 5), eval = TRUE, fig.width = 7.1, fig.height = 4.5}
-indir <- getwd() ; setwd("~/Desktop")
-
-# Visualize results with default settings
-plot_samplesim(name = "simulation_1", change = TRUE)
-setwd(indir)
+```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+# Visualize results expressed as percentages of change
+plot_samplesim(name = "simulation_1", change = TRUE, reference = 2)
 ```
+
+Finally, if you are not satisfied with the quality of the graph, you can customized it by 1) importing data and 2) programming your own graph. Let's take an example with the [**ggplot2**](https://cran.r-project.org/web/packages/ggplot2/index.html) package (used in **samplesim**).
+
+```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+# Import medians and widths of credible intervals
+datas <- get_output("simulation_1")
+
+# Reminder #1
+head(datas)
+
+# Reminder #2
+tail(datas)
+
+# Graph
+ggplot(aes(x = size, y = value), data = datas) +
+  geom_boxplot(aes(fill = source), width = 0.8, outlier.shape = NA) +
+  labs(x = "Sample size", y = "Values", fill = "Sources") +
+  theme(legend.position = "bottom") +
+  theme(legend.title = element_blank()) +
+  facet_grid(. ~ type)
+```
+
+Or your can only represent the medians values. For instance (with percentages of change):
+
+
+```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+# Import medians and widths of credible intervals
+datas <- get_output("simulation_1", change = TRUE)
+
+# Select medians of credible intervals
+medians <- datas[datas$type == "Median of posterior distribution", ]
+
+# Print data
+head(medians)
+
+# Graph
+ggplot(aes(x = size, y = value, group = source), data = medians) +
+  geom_point(aes(color = source)) +
+  geom_line(aes(color = source)) +
+  labs(x = "Sample size", y = "Change in medians (%)", color = "Sources") +
+  theme_light() +
+  theme(legend.position = "bottom") +
+  theme(legend.title = element_blank())
+```
+
 
 # Reference {-}
 
