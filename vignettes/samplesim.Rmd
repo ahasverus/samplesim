@@ -64,7 +64,7 @@ library(samplesim)
 ```
 
 ```{r, eval = TRUE, echo = FALSE}
-library(samplesim)
+suppressMessages(library(samplesim))
 ```
 
 
