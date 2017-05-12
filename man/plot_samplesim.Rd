@@ -43,11 +43,11 @@ samplesim(
   nsamples = c(5, 10, 25),
   nrep = 10,
   modwhich = 4,
-  name = "sim_1")
+  name = "sim_2")
 
 # Visualize results
-plot_samplesim(name = "sim_1")
+plot_samplesim(name = "sim_2")
 
 # Visualize results (percentage of change)
-plot_samplesim(name = "sim_1", change = TRUE, reference = 5)
+plot_samplesim(name = "sim_2", change = TRUE, reference = 5)
 }

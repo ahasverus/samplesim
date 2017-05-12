@@ -53,16 +53,16 @@ samplesim(
   nsamples = c(5, 10, 25),
   nrep = 10,
   modwhich = 4,
-  name = "sim_1")
+  name = "sim_3")
 
 # Import results
-res <- get_output(name = "sim_1")
+res <- get_output(name = "sim_3")
 
 # Print results
 head(res, 10)
 
 # Import results (percentage of change)
-res <- get_output(name = "sim_1", change = TRUE, reference = 5)
+res <- get_output(name = "sim_3", change = TRUE, reference = 5)
 
 # Print results
 head(res, 10)

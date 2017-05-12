@@ -38,12 +38,12 @@ data(rawPrey)
 
 # Group similar preys
 src <- list(
-  Marine    = c('Ristri', 'Urilom'),
-  Reindeer  = c('Rantar'),
-  Voles     = c('Micoec'),
-  Lemming   = c('Lemlem'),
-  Ptarmigan = c('Laglag', 'Lagmut'),
-  Birds     = c('Melnig'))
+  Marine    = c("Ristri", "Urilom"),
+  Reindeer  = c("Rantar"),
+  Voles     = c("Micoec"),
+  Lemming   = c("Lemlem"),
+  Ptarmigan = c("Laglag", "Lagmut"),
+  Birds     = c("Melnig"))
 
 # Format data
 (meansdiso <- format_sources(rawPrey, labels = src))

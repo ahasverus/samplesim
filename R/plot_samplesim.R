@@ -76,7 +76,7 @@ function(name = "simulation_1", change = FALSE, reference = NULL){
     # CLEAN AND SORT FACTOR < REPLICATES >
 
     tab$replicate <- as.character(gsub("replicate", "", tab$replicate))
-    tab$replicate <- factor(tab$replicate, level = sort(as.numeric(unique(tab$replicate))))
+    tab$replicate <- factor(tab$replicate, levels = sort(as.numeric(unique(tab$replicate))))
 
   }
 
@@ -84,9 +84,9 @@ function(name = "simulation_1", change = FALSE, reference = NULL){
   # CLEAN FACTOR
 
   tab$size <- as.character(gsub("size", "", tab$size))
-  tab$size <- factor(tab$size, level = sort(as.numeric(unique(tab$size))))
-  tab$source <- factor(tab$source, level = sort(as.character(unique(tab$source))))
-  tab$type   <- factor(tab$type, level = c("Width of credible intervals", "Median of posterior distribution"))
+  tab$size <- factor(tab$size, levels = sort(as.numeric(unique(tab$size))))
+  tab$source <- factor(tab$source, levels = sort(as.character(unique(tab$source))))
+  tab$type   <- factor(tab$type, levels = c("Width of credible intervals", "Median of posterior distribution"))
 
 
 
