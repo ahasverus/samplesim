@@ -2,8 +2,6 @@
 
 \alias{samplesim-package}
 
-\alias{samplesim}
-
 \docType{package}
 
 \title{

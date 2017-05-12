@@ -87,5 +87,7 @@ function(name = "simulation_1", change = FALSE, reference = NULL){
   tab$source <- factor(tab$source, level = sort(as.character(unique(tab$source))))
   tab$type   <- factor(tab$type, level = c("Width of credible intervals", "Median of posterior distribution"))
 
+  setwd("..")
+
   tab
 }
