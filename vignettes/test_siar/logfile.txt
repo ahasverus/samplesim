@@ -2,14 +2,15 @@
         SampleSim - User-defined parameters
 ====================================================
 
-Simulation name: simulation_1
-Date: 2017-05-11 20:04:30
+Simulation name: test_siar
+Date: 2017-10-30 10:04:15
 
 Type of sampling: one source
-Modified source: 3
+Package: siar
+Modified source: 6
 Modified source name: Voles
-Number of replicates by sample size: 500
-Sample sizes: 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 25, 50, 75, 100, 250
+Number of replicates by sample size: 999
+Sample sizes: 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 25, 50, 75, 100, 150, 250, 500
 Credible intervals width: 90
 
 ====================================================

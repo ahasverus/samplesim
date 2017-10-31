@@ -9,17 +9,21 @@ This plot function is a graphical representation of the effects of sample size o
 }
 
 \usage{
-plot_samplesim(name = "simulation_1", change = FALSE, reference = NULL)
+plot_samplesim(name = "simulation_name", change = FALSE, reference = NULL)
 }
 
 \arguments{
 \item{name}{Name of the simulation to plot results.}
-\item{change}{If TRUE, values are expressed as a percentage of change.}
+\item{change}{If TRUE, values are expressed as a percentage of change compared to the reference.}
 \item{reference}{The reference state to compute percentage of change.}
 }
 
 \details{
 This plot function automatically loads results data stored by the \code{\link{samplesim}} function from the simulation name. It produces two plots. The first plot presents the width of the credible interval displayed for each sample size and each source. The second represents the median of the posterior distribution for each sample size and each source.
+}
+
+\references{
+Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A., Yoccoz N.G. How many is enough? An R package for evaluating the effect of sample size on estimates and precision of stable isotope mixing solutions. Submitted in Methods in Ecology and Evolution.
 }
 
 \author{
@@ -31,23 +35,5 @@ Nicolas Casajus, Nicolas Lecomte, Dorothee Ehrich
 }
 
 \examples{
-# Load datasets
-data(dataPrey)
-data(dataConsumer)
-
-# Effect of sample size by modifying source 4
-samplesim(
-  dataConsumer,
-  dataPrey,
-  type = "one source",
-  nsamples = c(5, 10, 25),
-  nrep = 10,
-  modwhich = 4,
-  name = "sim_2")
-
-# Visualize results
-plot_samplesim(name = "sim_2")
-
-# Visualize results (percentage of change)
-plot_samplesim(name = "sim_2", change = TRUE, reference = 5)
+# See the vignette for a complete example.
 }

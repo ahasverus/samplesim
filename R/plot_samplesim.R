@@ -1,10 +1,14 @@
-plot_samplesim <-
-function(name = "simulation_1", change = FALSE, reference = NULL){
+plot_samplesim <- function(
+	name      = "simulation_name",
+	change    = FALSE,
+	reference = NULL
+){
 
 
 
   # CHECKS
-	if (length(which(dir() == name)) == 0){
+	if (length(which(dir() == name)) == 0) {
+
     stop("Select the appropriate folder or simulation name.")
   }
 
@@ -18,52 +22,130 @@ function(name = "simulation_1", change = FALSE, reference = NULL){
 
 
 
-  # CONVERT IN % OF CHANGE
+	# CONVERT IN % OF CHANGE
 
-  if (change){
+  if (change) {
 
-    if (is.null(reference)){
+		if (is.null(reference)) {
+
       reference <- as.numeric(gsub("size", "", dimnames(medians)$size[1]))
     }
 
-    medians <- apply(medians, 3:2, mean)
-    widths <- apply( widths, 3:2, mean)
+		tab1 <- as.data.frame(
+			matrix(
+				ncol = length(dimnames(medians)[2]$source),
+				nrow = length(dimnames(medians)[3]$size)
+			)
+		)
+		rownames(tab1) <- dimnames(medians)[3]$size
+		colnames(tab1) <- dimnames(medians)[2]$source
 
-    pos <- which(rownames(medians) == paste0("size", reference))
 
-    for (i in (1:nrow(medians))[-pos]){
-      medians[i, ] <- round(100 * (medians[i, ] - medians[pos, ]) / medians[pos, ], 1)
-      widths[i, ] <- round(100 * (widths[i, ] - widths[pos, ]) / widths[pos, ], 1)
+		tab2 <- tab1
+
+		for (i in 1:dim(medians)[2]) {
+
+			for (j in 1:dim(medians)[3]) {
+
+				tab1[j, i] <- mean(medians[ , i, j])
+				tab2[j, i] <- mean( widths[ , i, j])
+			}
+		}
+
+    pos <- which(rownames(tab1) == paste0("size", reference))
+
+    for (i in (1:nrow(tab1))[-pos]){
+
+      tab1[i, ] <- round(100 * (tab1[i, ] - tab1[pos, ]) / tab1[pos, ], 3)
+      tab2[i, ] <- round(100 * (tab2[i, ] - tab2[pos, ]) / tab2[pos, ], 3)
     }
 
-    medians[pos, ] <- round(100 * (medians[pos, ] - medians[pos, ]) / medians[pos, ], 1)
-    widths[pos, ] <- round(100 * (widths[pos, ] - widths[pos, ]) / widths[pos, ], 1)
+    tab1[pos, ] <- round(100 * (tab1[pos, ] - tab1[pos, ]) / tab1[pos, ], 3)
+    tab2[pos, ] <- round(100 * (tab2[pos, ] - tab2[pos, ]) / tab2[pos, ], 3)
 
 
-    medians <- adply(medians, 1:2)
-    medians$type <- rep("Width of credible intervals", nrow(medians))
-    widths <- adply(widths, 1:2)
-    widths$type <- rep("Median of posterior distribution", nrow(widths))
+		dat1 <- dat2 <- data.frame()
 
-    colnames(medians)[3] <- colnames(widths)[3] <- 'value'
+		for (i in 1:ncol(tab1)) {
 
-    tab <- rbind(medians, widths)
+			dat1 <- rbind(
+				dat1,
+				data.frame(
+					size   = rownames(tab1),
+					source = rep(colnames(tab1)[i], nrow(tab1)),
+					value  = tab1[ , i]
+				)
+			)
+
+			dat2 <- rbind(
+				dat2,
+				data.frame(
+					size   = rownames(tab2),
+					source = rep(colnames(tab2)[i], nrow(tab2)),
+					value  = tab2[ , i]
+				)
+			)
+		}
+
+    dat1$type <- rep("Median of posterior distribution", nrow(dat1))
+    dat2$type <- rep("Width of credible intervals", nrow(dat2))
+
+    tab <- rbind(dat1, dat2)
 
   } else {
 
-    # CONVERT < WIDTHS > TO DATA FRAME
+		# CONVERT < WIDTHS > TO DATA FRAME
 
-    tab1 <- adply(widths, 3:1)
-    colnames(tab1) <- c("size", "source", "replicate", "value")
-    tab1$type <- rep("Width of credible intervals", nrow(tab1))
+    tab1 <- data.frame()
+
+		for (i in 1:dim(medians)[3]) {
+
+			dat <- medians[ , , i]
+			tmp <- data.frame()
+
+			for (j in 1:ncol(dat)) {
+
+				tmp <- rbind(
+					tmp,
+					data.frame(
+						source    = colnames(dat)[j],
+						size      = rep(dimnames(medians)[3]$size[i], nrow(dat)),
+						replicate = rownames(dat),
+						value     = dat[ , j],
+						row.names = NULL
+					)
+				)
+			}
+			tab1 <- rbind(tab1, tmp)
+		}
+    tab1$type <- rep("Median of posterior distribution", nrow(tab1))
 
 
 
     # CONVERT < MEDIANS > TO DATA FRAME
 
-    tab2 <- adply(medians, 3:1)
-    colnames(tab2) <- c("size", "source", "replicate", "value")
-    tab2$type <- rep("Median of posterior distribution", nrow(tab2))
+		tab2 <- data.frame()
+
+		for (i in 1:dim(widths)[3]) {
+
+			dat <- widths[ , , i]
+			tmp <- data.frame()
+
+			for (j in 1:ncol(dat)) {
+				tmp <- rbind(
+					tmp,
+					data.frame(
+						source    = colnames(dat)[j],
+						size      = rep(dimnames(widths)[3]$size[i], nrow(dat)),
+						replicate = rownames(dat),
+						value     = dat[ , j],
+						row.names = NULL
+					)
+				)
+			}
+			tab2 <- rbind(tab2, tmp)
+		}
+    tab2$type <- rep("Width of credible intervals", nrow(tab2))
 
 
 
@@ -83,8 +165,8 @@ function(name = "simulation_1", change = FALSE, reference = NULL){
 
   # CLEAN FACTOR
 
-  tab$size <- as.character(gsub("size", "", tab$size))
-  tab$size <- factor(tab$size, levels = sort(as.numeric(unique(tab$size))))
+  tab$size   <- as.character(gsub("size", "", tab$size))
+  tab$size   <- factor(tab$size, levels = sort(as.numeric(unique(tab$size))))
   tab$source <- factor(tab$source, levels = sort(as.character(unique(tab$source))))
   tab$type   <- factor(tab$type, levels = c("Width of credible intervals", "Median of posterior distribution"))
 
@@ -92,32 +174,94 @@ function(name = "simulation_1", change = FALSE, reference = NULL){
 
   # PLOT RESULTS
 
-  if (change){
+  if (change) {
+
     print(
-      ggplot(aes_string(x = 'size', y = 'value', group = 'source'), data = tab) +
-        geom_point(aes_string(color = 'source'), data = tab, position = position_dodge(0)) +
-        geom_line(aes_string(color = 'source'), data = tab, position = position_dodge(0)) +
-        labs(x = "Sample size", y = "Change in values (%)", color = "Sources") +
-        theme_light() +
-        theme(legend.position = "bottom") +
-        theme(legend.title = element_blank()) +
-        facet_grid(. ~ type) +
-        theme(strip.text.x = element_text(face = "bold"))
+      ggplot(
+				aes_string(
+					x     = "size",
+					y     = "value",
+					group = "source"
+				),
+				data = tab
+			) +
+      geom_point(
+				aes_string(
+					color = "source"
+				),
+				data     = tab,
+				position = position_dodge(0)
+			) +
+      geom_line(
+				aes_string(
+					color = "source"
+				),
+				data     = tab,
+				position = position_dodge(0)
+			) +
+      labs(
+				x     = "Sample size",
+				y     = "Change in values (%)",
+				color = "Sources"
+			) +
+      theme_light(
+			) +
+      theme(
+				legend.position = "bottom"
+			) +
+      theme(
+				legend.title = element_blank()
+			) +
+      facet_grid(
+				. ~ type
+			) +
+      theme(
+				strip.text.x = element_text(face = "bold")
+			)
     )
+
   } else {
+
     print(
-      ggplot(aes_string(x = 'size', y = 'value'), data = tab) +
-        geom_boxplot(aes_string(color = 'source'), data = tab, width = 1.0, outlier.shape = NA) +
-        labs(x = "Sample size", y = "Values", color = "Sources") +
-        coord_cartesian(ylim = c(0, max(tab$value))) +
-        theme_light() +
-        theme(legend.position = "bottom") +
-        theme(legend.title = element_blank()) +
-        facet_grid(. ~ type) +
-        theme(strip.text.x = element_text(face = "bold"))
+      ggplot(
+				aes_string(
+					x = "size",
+					y = "value"
+				),
+				data = tab
+			) +
+      geom_boxplot(
+				aes_string(
+					color = "source"
+				),
+				data          = tab,
+				width         = 1.0,
+				outlier.shape = NA
+			) +
+      labs(
+				x     = "Sample size",
+				y     = "Values",
+				color = "Sources"
+			) +
+      coord_cartesian(
+				ylim = c(0, max(tab$value))
+			) +
+      theme_light(
+			) +
+      theme(
+				legend.position = "bottom"
+			) +
+      theme(
+				legend.title = element_blank()
+			) +
+      facet_grid(
+				. ~ type
+			) +
+      theme(
+				strip.text.x = element_text(face = "bold")
+			)
     )
   }
-
 
   setwd("..")
 }

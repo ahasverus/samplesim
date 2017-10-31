@@ -9,20 +9,20 @@ This function imports samplesim simulation results. More specifically it loads t
 }
 
 \usage{
-get_output(name = "simulation_1", change = FALSE, reference = NULL)
+get_output(name = "simulation_name", change = FALSE, reference = NULL)
 }
 
 \arguments{
-\item{name}{Name of the simulation to plot results.}
-\item{change}{If TRUE, values are expressed as a percentage of change.}
+\item{name}{Name of the simulation to extract results.}
+\item{change}{If TRUE, values are expressed as a percentage of change compared to a reference.}
 \item{reference}{The reference state to compute percentage of change. Default is the minimum value of sample size.}
 }
 
 \value{
 A data frame with five columns:
-\item{replicate}{The number of replicate.}
 \item{source}{The source name.}
 \item{size}{The sample size.}
+\item{replicate}{The number of replicate.}
 \item{value}{The value of medians/widths of credible intervals.}
 \item{type}{The label of value (i.e. medians or widths)}
 If 'change' is TRUE, then the column replicate is omitted and results are aggregated over replicates.
@@ -41,29 +41,5 @@ Nicolas Casajus, Nicolas Lecomte, Dorothee Ehrich
 }
 
 \examples{
-# Load datasets
-data(dataPrey)
-data(dataConsumer)
-
-# Effect of sample size by modifying source 4
-samplesim(
-  dataConsumer,
-  dataPrey,
-  type = "one source",
-  nsamples = c(5, 10, 25),
-  nrep = 10,
-  modwhich = 4,
-  name = "sim_3")
-
-# Import results
-res <- get_output(name = "sim_3")
-
-# Print results
-head(res, 10)
-
-# Import results (percentage of change)
-res <- get_output(name = "sim_3", change = TRUE, reference = 5)
-
-# Print results
-head(res, 10)
+# See the vignette for a complete example.
 }

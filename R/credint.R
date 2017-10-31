@@ -1,4 +1,14 @@
-credint <-
-function(data, interval)
+credint <- function(
+	data,
+	interval
+) {
 
-	apply(data, 2, credintt, interval = interval)
+	return(
+		apply(
+			X        = data,
+			MARGIN   = 2,
+			FUN      = credintt,
+			interval = interval
+		)
+	)
+}
