@@ -114,7 +114,22 @@ This dataset contains the isotopic plasma values of the consumers over two (or m
 
 Each row of the data frame corresponds to one consumer. Let's take a look at the dataset available in the **samplesim** package by importing data with the **MixSIAR** function `load_mix_data()`.
 
-```{r, eval = TRUE, echo = TRUE}
+```{r, eval = TRUE, echo = FALSE}
+# Get the location of the dataset
+mix.filename <- "data/foxes_consumer.csv")
+
+# Import isotopic plasma values of the consumers
+consumer <- MixSIAR::load_mix_data(
+  filename     = mix.filename,
+  iso_names    = c("d13C", "d15N"),
+  factors      = NULL,
+  fac_random   = NULL,
+  fac_nested   = NULL,
+  cont_effects = NULL
+)
+```
+
+```{r, eval = FALSE, echo = TRUE}
 # Get the location of the dataset
 mix.filename <- system.file("inst/external", "foxes_consumer.csv", package = "samplesim")
 
@@ -177,7 +192,21 @@ A data frame expressing isotopic plasma values as means and standard deviation. 
 
 Let's take a look at the dataset available in the **samplesim** package by importing data with the **MixSIAR** function `load_source_data()`.
 
-```{r, eval = TRUE, echo = TRUE}
+```{r, eval = TRUE, echo = FALSE}
+# Get the location of the dataset
+sources.filename <- "data/foxes_sources.csv")
+
+# Import mean isotopic plasma values of the sources (Format #1)
+sources <- load_source_data(
+  filename       = sources.filename,
+  source_factors = NULL,
+  conc_dep       = FALSE,
+  data_type      = "means",
+  mix            = consumer
+)
+```
+
+```{r, eval = FALSE, echo = TRUE}
 # Get the location of the dataset
 sources.filename <- system.file("inst/external", "foxes_sources.csv", package = "samplesim")
 
@@ -232,7 +261,18 @@ A data frame expressing isotopic plasma values as means and standard deviation. 
 
 Let's take a look at the dataset available in the **samplesim** package by importing data with the **MixSIAR** function `load_discr_data()`.
 
-```{r, eval = TRUE, echo = TRUE}
+```{r, eval = TRUE, echo = FALSE}
+# Get the location of the dataset
+discr.filename <- "data/foxes_discr.csv")
+
+# Import TDF values
+discr <- load_discr_data(
+  filename       = sources.filename,
+  mix            = consumer
+)
+```
+
+```{r, eval = FALSE, echo = TRUE}
 # Get the location of the dataset
 discr.filename <- system.file("inst/external", "foxes_discrimination.csv", package = "samplesim")
 
