@@ -131,7 +131,11 @@ consumer <- MixSIAR::load_mix_data(
 
 ```{r, eval = FALSE, echo = TRUE}
 # Get the location of the dataset
-mix.filename <- system.file("inst/external", "foxes_consumer.csv", package = "samplesim")
+mix.filename <- system.file(
+  path    = "external",
+  file    = "foxes_consumer.csv",
+  package = "samplesim"
+)
 
 # Import isotopic plasma values of the consumers
 consumer <- MixSIAR::load_mix_data(
@@ -208,7 +212,11 @@ sources <- load_source_data(
 
 ```{r, eval = FALSE, echo = TRUE}
 # Get the location of the dataset
-sources.filename <- system.file("inst/external", "foxes_sources.csv", package = "samplesim")
+sources.filename <- system.file(
+  path    = "external",
+  file    = "foxes_sources.csv",
+  package = "samplesim"
+)
 
 # Import mean isotopic plasma values of the sources (Format #1)
 sources <- load_source_data(
@@ -271,7 +279,11 @@ discr <- load_discr_data(
 
 ```{r, eval = FALSE, echo = TRUE}
 # Get the location of the dataset
-discr.filename <- system.file("inst/external", "foxes_discrimination.csv", package = "samplesim")
+discr.filename <- system.file(
+  path    = "external",
+  file    = "foxes_discrimination.csv",
+  package = "samplesim"
+)
 
 # Import TDF values
 discr <- load_discr_data(
@@ -306,7 +318,7 @@ The **samplesim** function `plot_isospace()` represents consumer and sources dat
 # Plot data in the isotopic space (samplesim function)
 samplesim::plot_isospace(
   filename      = "isospace_samplesim",
-  plot_save_pdf = TRUE,
+  plot_save_pdf = FALSE,
   plot_save_png = FALSE,
   mix           = consumer,
   source        = sources,
@@ -320,7 +332,7 @@ If you prefer you can also used the `MixSIAR::plot_data()` function as follows:
 # Plot data in the isotopic space (MixSIAR function)
 MixSIAR::plot_data(
   filename      = "isospace_mixsiar",
-  plot_save_pdf = TRUE,
+  plot_save_pdf = FALSE,
   plot_save_png = FALSE,
   mix           = consumer,
   source        = sources,
@@ -510,16 +522,14 @@ Here we notice that the column replicate is omitted and percentages of change ar
 The **samplesim** package also offers the possibility of visualizing the effect of sample size on the width of the credible interval and on the median of the posterior distribution of the mixing models. This is possible with the function `plot_samplesim()`.
 
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 8, fig.height = 5}
-# ```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+```{r, echo = TRUE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
 # Visualize results
 samplesim::plot_samplesim(name = "test_siar")
 ```
 
 If you prefer you can represent the percentages of change:
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 8, fig.height = 5}
-# ```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+```{r, echo = TRUE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
 # Visualize results expressed as percentages of change
 samplesim::plot_samplesim(
   name      = "test_siar",
@@ -530,8 +540,7 @@ samplesim::plot_samplesim(
 
 Finally, if you are not satisfied with the quality of the graph, you can customize it by 1) importing data and 2) programming your own graph. Let's take an example with the [**ggplot2**](https://cran.r-project.org/web/packages/ggplot2/index.html) package (used in **samplesim**).
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 8, fig.height = 5}
-# ```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+```{r, echo = TRUE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
 # Import medians and widths of credible intervals
 datas <- get_output("test_siar")
 
@@ -573,8 +582,7 @@ facet_grid(. ~ type)
 Or your can only represent the medians values. For instance (with percentages of change):
 
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 8, fig.height = 5}
-# ```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+```{r, echo = TRUE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
 # Import medians and widths of credible intervals
 datas <- samplesim::get_output(
   name   = "test_siar",
