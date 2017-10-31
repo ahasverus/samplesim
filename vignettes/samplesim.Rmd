@@ -171,7 +171,7 @@ For further details on the function `load_mix_data()` the reader is referred to 
 
 This dataset contains the isotopic plasma values of the sources over two (or more) isotopes. It must be structured in one of two following formats:
 
-- _Format \#1_
+_**Format \#1**_
 
 A data frame with repeated measurements of plasma isotope (columns) for each source individual (row). In the example provided in **samplesim**, this dataset contains three columns:
 
@@ -179,7 +179,7 @@ A data frame with repeated measurements of plasma isotope (columns) for each sou
   - `d13C`, the plasma values of the d13C isotope
   - `d15N`, the plasma values of the d15N isotope
 
-- _Format \#2_
+_**Format \#2**_
 
 A data frame expressing isotopic plasma values as means and standard deviation. This dataset also contains the sample size of each source. In the example provided in **samplesim**, this dataset contains six columns:
 
@@ -235,9 +235,6 @@ sources$S_MU
 # Print the SD values of isotopic plasma values
 sources$S_SIG
 
-# Get the name of the isotopes
-sources$iso_names
-
 # Get the name of the sources
 sources$source_names
 
@@ -278,7 +275,7 @@ discr.filename <- system.file("inst/external", "foxes_discrimination.csv", packa
 
 # Import TDF values
 discr <- load_discr_data(
-  filename       = sources.filename,
+  filename       = discr.filename,
   mix            = consumer
 )
 ```
@@ -400,7 +397,7 @@ samplesim(
 )
 ```
 
-This function does not return any object in the R console. Instead, results are stored in the directory `test_siar` and they will need to be imported for results visualization ([see below section](#results)).
+This function does not return any object in the R console. Instead, results are stored in the directory `test_siar/` and they will need to be imported for results visualization ([see below section](#results)).
 
 - **Note 1:** if you want to estimate sample size impacts of all sources, you need to set `type = "all source"`. If you want to assess the impact of the sample size of consumers, you have to set `type = "consumer"`.
 
@@ -513,14 +510,16 @@ Here we notice that the column replicate is omitted and percentages of change ar
 The **samplesim** package also offers the possibility of visualizing the effect of sample size on the width of the credible interval and on the median of the posterior distribution of the mixing models. This is possible with the function `plot_samplesim()`.
 
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+```{r, echo = TRUE, eval = TRUE, fig.width = 8, fig.height = 5}
+# ```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
 # Visualize results
 samplesim::plot_samplesim(name = "test_siar")
 ```
 
 If you prefer you can represent the percentages of change:
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+```{r, echo = TRUE, eval = TRUE, fig.width = 8, fig.height = 5}
+# ```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
 # Visualize results expressed as percentages of change
 samplesim::plot_samplesim(
   name      = "test_siar",
@@ -531,7 +530,8 @@ samplesim::plot_samplesim(
 
 Finally, if you are not satisfied with the quality of the graph, you can customize it by 1) importing data and 2) programming your own graph. Let's take an example with the [**ggplot2**](https://cran.r-project.org/web/packages/ggplot2/index.html) package (used in **samplesim**).
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+```{r, echo = TRUE, eval = TRUE, fig.width = 8, fig.height = 5}
+# ```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
 # Import medians and widths of credible intervals
 datas <- get_output("test_siar")
 
@@ -573,7 +573,8 @@ facet_grid(. ~ type)
 Or your can only represent the medians values. For instance (with percentages of change):
 
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
+```{r, echo = TRUE, eval = TRUE, fig.width = 8, fig.height = 5}
+# ```{r, echo = TRUE, eval = TRUE, fig.width = 7.1, fig.height = 4.5}
 # Import medians and widths of credible intervals
 datas <- samplesim::get_output(
   name   = "test_siar",
