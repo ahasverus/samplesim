@@ -326,21 +326,7 @@ samplesim::plot_isospace(
 )
 ```
 
-If you prefer you can also used the `MixSIAR::plot_data()` function as follows:
-
-```{r, echo = TRUE, eval = TRUE, fig.width = 5, fig.height = 5}
-# Plot data in the isotopic space (MixSIAR function)
-MixSIAR::plot_data(
-  filename      = "isospace_mixsiar",
-  plot_save_pdf = FALSE,
-  plot_save_png = FALSE,
-  mix           = consumer,
-  source        = sources,
-  discr         = discr
-)
-```
-
-If your data make sense, let's move forward!
+If you prefer you can also used the `MixSIAR::plot_data()`. If your data make sense, let's move forward!
 
 
 
