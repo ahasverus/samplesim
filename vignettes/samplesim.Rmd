@@ -264,7 +264,7 @@ discr.filename <- "data/foxes_discr.csv"
 
 # Import TDF values
 discr <- load_discr_data(
-  filename       = sources.filename,
+  filename       = discr.filename,
   mix            = consumer
 )
 ```
