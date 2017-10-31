@@ -1,10 +1,15 @@
-language: r
+language:             r
 
-cache: packages
+cache:                packages
 
-sudo: required
+sudo:                 required
 
-warnings_are_errors: false
+warnings_are_errors:  false
+
+before_install:
+  - sudo add-apt-repository ppa:marutter/rrutter -y
+  - sudo apt-get update
+  - sudo apt-get install jags
 
 notifications:
   email:
