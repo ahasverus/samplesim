@@ -116,7 +116,7 @@ Each row of the data frame corresponds to one consumer. Let's take a look at the
 
 ```{r, eval = TRUE, echo = FALSE}
 # Get the location of the dataset
-mix.filename <- "data/foxes_consumer.csv")
+mix.filename <- "data/foxes_consumer.csv"
 
 # Import isotopic plasma values of the consumers
 consumer <- MixSIAR::load_mix_data(
@@ -194,7 +194,7 @@ Let's take a look at the dataset available in the **samplesim** package by impor
 
 ```{r, eval = TRUE, echo = FALSE}
 # Get the location of the dataset
-sources.filename <- "data/foxes_sources.csv")
+sources.filename <- "data/foxes_sources.csv"
 
 # Import mean isotopic plasma values of the sources (Format #1)
 sources <- load_source_data(
@@ -263,7 +263,7 @@ Let's take a look at the dataset available in the **samplesim** package by impor
 
 ```{r, eval = TRUE, echo = FALSE}
 # Get the location of the dataset
-discr.filename <- "data/foxes_discr.csv")
+discr.filename <- "data/foxes_discr.csv"
 
 # Import TDF values
 discr <- load_discr_data(
