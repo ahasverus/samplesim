@@ -260,7 +260,7 @@ Let's take a look at the dataset available in the **samplesim** package by impor
 
 ```{r, eval = TRUE, echo = FALSE}
 # Get the location of the dataset
-discr.filename <- "data/foxes_discr.csv"
+discr.filename <- "data/foxes_discrimination.csv"
 
 # Import TDF values
 discr <- load_discr_data(
