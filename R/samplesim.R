@@ -114,6 +114,10 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' ## Please visit the vignette available at: 
+#' ## https://ahasverus.github.io/samplesim/articles/samplesim.html
+#' }
 
 samplesim <- function(package = "siar", mix, source, discr, type = NULL, 
                       nsamples = NULL, modify = NULL, nrep = 100, 
