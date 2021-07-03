@@ -1,14 +1,20 @@
-# History files
+# macOS files ----
+.DS_Store
+
+# History files ----
 .Rhistory
 .Rapp.history
 
-# folders
-./.DS_Store
-./R/.DS_Store
-./man/.DS_Store
-./data/.DS_Store
-./inst/.DS_Store
-./inst/external/.DS_Store
-./vignettes/.DS_Store
-./vignettes/test_siar/.DS_Store
-./vignettes/test_mixsiar/.DS_Store
+# Session Data files ----
+.RData
+.Ruserdata
+
+# RStudio files ----
+.Rproj.user/
+
+# R Environment Variables ----
+.Renviron
+
+# User-specific files ----
+README.html
+inst/doc

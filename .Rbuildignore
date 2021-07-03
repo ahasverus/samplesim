@@ -1,2 +1,3 @@
-^\.travis\.yml$
-^samplesim\.pdf$
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
