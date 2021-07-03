@@ -1,46 +1,69 @@
-get_output <- function(
-	name      = "simulation_name",
-	change    = FALSE,
-	reference = NULL
-){
+#' Import samplesim results
+#'
+#' @description 
+#' This function imports samplesim simulation results. More specifically it 
+#' loads the median and width of credible intervals.
+#'
+#' @param change a logical value. If `TRUE` values are expressed as a 
+#'   percentage of change compared to a reference. Default is `FALSE`.
+#'   
+#' @param reference an integer. The reference state to compute percentage of 
+#'   change. If `NULL` (default) the minimum value of sample size will be used.
+#' 
+#' @inheritParams samplesim
+#'
+#' @return A data frame with five columns:
+#' - `source`: the source name.
+#' - `size`: the sample size.
+#' - `replicate`: the number of replicate.
+#' - `value`: the value of medians/widths of credible intervals.
+#' - `type`: the label of value (i.e. medians or widths)
+#' 
+#' If `change = TRUE`, then the column replicate is omitted and results are 
+#' aggregated over replicates.
+#' 
+#' @seealso [samplesim()], [plot_samplesim()], [plot_isospace()]
+#' 
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' ## Please visit the vignette available at: 
+#' ## https://ahasverus.github.io/samplesim/articles/samplesim.html
+#' }
 
+get_output <- function(name, path = ".", change = FALSE, reference = NULL) {
 
+  ## Checks ----
 
-  # CHECKS
-
-	if (length(which(dir() == name)) == 0) {
-
-    stop("Select the appropriate folder or simulation name.")
+  if (!dir.exists(path)) {
+    stop("The directory ", path, " does not exist.")
+  }
+  
+  if (!dir.exists(file.path(path, name))) {
+    stop("The directory ", file.path(path, name), " does not exist.")
   }
 
 
+  ## Import data ----
 
-  # IMPORT DATA
-
-  setwd(name)
-  medians <- readRDS("medians.rds")
-  widths  <- readRDS("widths.rds")
+  medians <- readRDS(file.path(path, name, "medians.rds"))
+  widths  <- readRDS(file.path(path, name, "widths.rds"))
 
 
-
-  # CONVERT IN % OF CHANGE
+  ## Convert into % of change ----
 
   if (change) {
 
 		if (is.null(reference)) {
-
-      reference <- as.numeric(gsub("size", "", dimnames(medians)$size[1]))
+      reference <- as.numeric(gsub("size", "", dimnames(medians)$"size"[1]))
     }
 
-		tab1 <- as.data.frame(
-			matrix(
-				ncol = length(dimnames(medians)[2]$source),
-				nrow = length(dimnames(medians)[3]$size)
-			)
-		)
-		rownames(tab1) <- dimnames(medians)[3]$size
-		colnames(tab1) <- dimnames(medians)[2]$source
-
+		tab1 <- as.data.frame(matrix(ncol = length(dimnames(medians)[2]$"source"),
+		                             nrow = length(dimnames(medians)[3]$"size")))
+		
+		rownames(tab1) <- dimnames(medians)[3]$"size"
+		colnames(tab1) <- dimnames(medians)[2]$"source"
 
 		tab2 <- tab1
 
@@ -54,6 +77,10 @@ get_output <- function(
 		}
 
     pos <- which(rownames(tab1) == paste0("size", reference))
+    
+    if (length(pos) == 0) {
+      stop("Unable to retrieve the sample size ", reference)
+    }
 
     for (i in (1:nrow(tab1))[-pos]){
 
@@ -69,33 +96,23 @@ get_output <- function(
 
 		for (i in 1:ncol(tab1)) {
 
-			dat1 <- rbind(
-				dat1,
-				data.frame(
-					size   = rownames(tab1),
-					source = rep(colnames(tab1)[i], nrow(tab1)),
-					value  = tab1[ , i]
-				)
-			)
+			dat1 <- rbind(dat1, data.frame("size"   = rownames(tab1),
+			                               "source" = rep(colnames(tab1)[i], 
+			                                              nrow(tab1)),
+			                               "value"  = tab1[ , i]))
 
-			dat2 <- rbind(
-				dat2,
-				data.frame(
-					size   = rownames(tab2),
-					source = rep(colnames(tab2)[i], nrow(tab2)),
-					value  = tab2[ , i]
-				)
-			)
+			dat2 <- rbind(dat2, data.frame("size"   = rownames(tab2),
+			                               "source" = rep(colnames(tab2)[i], 
+			                                              nrow(tab2)),
+			                               "value"  = tab2[ , i]))
 		}
 
-    dat1$type <- rep("Median of posterior distribution", nrow(dat1))
-    dat2$type <- rep("Width of credible intervals", nrow(dat2))
+    dat1$"type" <- rep("Median of posterior distribution", nrow(dat1))
+    dat2$"type" <- rep("Width of credible intervals", nrow(dat2))
 
     tab <- rbind(dat1, dat2)
 
   } else {
-
-		# CONVERT < WIDTHS > TO DATA FRAME
 
     tab1 <- data.frame()
 
@@ -106,24 +123,19 @@ get_output <- function(
 
 			for (j in 1:ncol(dat)) {
 
-				tmp <- rbind(
-					tmp,
-					data.frame(
-						source    = colnames(dat)[j],
-						size      = rep(dimnames(medians)[3]$size[i], nrow(dat)),
-						replicate = rownames(dat),
-						value     = dat[ , j],
-						row.names = NULL
-					)
-				)
+				tmp <- rbind(tmp, data.frame("source"    = colnames(dat)[j],
+				                             "size"      = rep(dimnames(
+				                               medians)[3]$"size"[i], nrow(dat)),
+				                             "replicate" = rownames(dat),
+				                             "value"     = dat[ , j],
+				                             row.names   = NULL))
 			}
+			
 			tab1 <- rbind(tab1, tmp)
 		}
-    tab1$type <- rep("Median of posterior distribution", nrow(tab1))
+    
+    tab1$"type" <- rep("Median of posterior distribution", nrow(tab1))
 
-
-
-    # CONVERT < MEDIANS > TO DATA FRAME
 
 		tab2 <- data.frame()
 
@@ -133,45 +145,39 @@ get_output <- function(
 			tmp <- data.frame()
 
 			for (j in 1:ncol(dat)) {
-				tmp <- rbind(
-					tmp,
-					data.frame(
-						source    = colnames(dat)[j],
-						size      = rep(dimnames(widths)[3]$size[i], nrow(dat)),
-						replicate = rownames(dat),
-						value     = dat[ , j],
-						row.names = NULL
-					)
-				)
+			  
+				tmp <- rbind(tmp, data.frame("source"    = colnames(dat)[j],
+				                             "size"      = rep(dimnames(
+				                               widths)[3]$"size"[i], nrow(dat)),
+				                             "replicate" = rownames(dat),
+				                             "value"     = dat[ , j],
+				                             row.names = NULL))
 			}
+			
 			tab2 <- rbind(tab2, tmp)
 		}
-    tab2$type <- rep("Width of credible intervals", nrow(tab2))
-
-
-
-    # COLLAPSE THE TWO DATA FRAME
+		
+    tab2$"type" <- rep("Width of credible intervals", nrow(tab2))
 
     tab <- rbind(tab1, tab2)
 
 
-
-    # CLEAN AND SORT FACTOR < REPLICATES >
-
-    tab$replicate <- as.character(gsub("replicate", "", tab$replicate))
-    tab$replicate <- factor(tab$replicate, levels = sort(as.numeric(unique(tab$replicate))))
+    tab$"replicate" <- as.character(gsub("replicate", "", tab$"replicate"))
+    tab$"replicate" <- factor(tab$"replicate", 
+                              levels = sort(as.numeric(unique(
+                                tab$"replicate"))))
 
   }
 
 
-  # CLEAN FACTOR
+  tab$"size"   <- as.character(gsub("size", "", tab$"size"))
+  tab$"size"   <- factor(tab$"size", 
+                         levels = sort(as.numeric(unique(tab$"size"))))
+  tab$"source" <- factor(tab$"source", 
+                         levels = sort(as.character(unique(tab$"source"))))
+  tab$"type"   <- factor(tab$"type", 
+                         levels = c("Width of credible intervals", 
+                                    "Median of posterior distribution"))
 
-  tab$size   <- as.character(gsub("size", "", tab$size))
-  tab$size   <- factor(tab$size, levels = sort(as.numeric(unique(tab$size))))
-  tab$source <- factor(tab$source, levels = sort(as.character(unique(tab$source))))
-  tab$type   <- factor(tab$type, levels = c("Width of credible intervals", "Median of posterior distribution"))
-
-  setwd("..")
-
-  return(tab)
+  tab
 }
