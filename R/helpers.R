@@ -23,7 +23,7 @@ credint <- function(data, interval) {
 #' Internal function
 #' @noRd
 
-meansd_nd <- function(data, n, input) {
+meansd.nd <- function(data, n, input) {
   
   if (input == "means") {
     

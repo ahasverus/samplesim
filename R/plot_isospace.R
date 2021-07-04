@@ -17,6 +17,7 @@
 #' @seealso [samplesim()], [get_output()], [plot_samplesim()]
 #' 
 #' @export
+#' @import ggplot2
 #'
 #' @examples
 #' \dontrun{
@@ -28,7 +29,7 @@ plot_isospace <- function(mix, source, discr, filename = "isospace",
                           plot_save_pdf = FALSE, plot_save_png = FALSE) {
 
 
-
+  
   if (length(mix$"FAC") > 0 || length(source$"S_factor1") > 0) {
     stop("Your data contain at least one factor. ", 
          "Please use MixSIAR::plot_data() instead.")
@@ -98,13 +99,13 @@ plot_isospace <- function(mix, source, discr, filename = "isospace",
                               discr$"sig2"[, paste0("SD", iso)])
     }
 
-    dat_src <- data.frame(x      = mu[ , 1], 
-                          y      = mu[ , 2],
-                          xmin   = mu[ , 1] - sig[ , 1],
-                          xmax   = mu[ , 1] + sig[ , 1],
-                          ymin   = mu[ , 2] - sig[ , 2],
-                          ymax   = mu[ , 2] + sig[ , 2],
-                          source = source$"source_names")
+    dat_src <- data.frame("x"      = mu[ , 1], 
+                          "y"      = mu[ , 2],
+                          "xmin"   = mu[ , 1] - sig[ , 1],
+                          "xmax"   = mu[ , 1] + sig[ , 1],
+                          "ymin"   = mu[ , 2] - sig[ , 2],
+                          "ymax"   = mu[ , 2] + sig[ , 2],
+                          "source" = source$"source_names")
 
     if (i > 1) {
       grDevices::dev.new()
