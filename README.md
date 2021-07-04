@@ -1,42 +1,80 @@
-# samplesim
 
-An R package for estimating sample size effects in stable isotope mixing solutions
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![Travis](https://travis-ci.org/ahasverus/samplesim.svg?branch=master)](https://travis-ci.org/ahasverus/samplesim)
+# samplesim <!-- <img src="man/figures/hexsticker.png" height="120" align="right"/> -->
 
+<!-- badges: start -->
 
-### Installation
+[![R CMD
+Check](https://github.com/ahasverus/samplesim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ahasverus/samplesim/actions/workflows/R-CMD-check.yaml)
+[![Website
+deployment](https://github.com/ahasverus/samplesim/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/ahasverus/samplesim/actions/workflows/pkgdown.yaml)
+[![License: GPL (>=
+2)](https://img.shields.io/badge/License-GPL%20%28%3E%3D%202%29-blue.svg)](https://choosealicense.com/licenses/gpl-2.0/)
+[![LifeCycle](man/figures/lifecycle/lifecycle-stable.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![Project Status:
+Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+<!-- badges: end -->
 
-```r
-# Install the < devtools > package
-install.packages("devtools", dependencies = TRUE)
+The goal of the R package `samplesim` is to estimate sample size effects
+in stable isotope mixing solutions.
 
-# Load the < devtools > package
-library(devtools)
+## System requierements
 
-# Install the < samplesim > package from GitHub
-devtools::install_github("ahasverus/samplesim", build_vignettes = TRUE)
+The package `samplesim` requires the freeware
+[JAGS](https://mcmc-jags.sourceforge.io/).
 
-# Load the < samplesim > package
-library(samplesim)
+## Installation
+
+You can install the stable version of `samplesim` with:
+
+``` r
+## Install stable version of 'samplesim' ----
+install.packages("samplesim")
 ```
 
-### Getting started
+Or you can install the development version from
+[GitHub](https://github.com/) with:
 
-```r
-# List the content (objects and functions) of the < samplesim > package
-ls("package:samplesim")
+``` r
+## Install 'remotes' package (if not already installed) ----
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
 
-# Open the < samplesim > package home page
-help(package = "samplesim")
-
-# Open the help file of a specific function
-help(plot_samplesim)
-
-# Open the vignette
-browseVignettes(package = "samplesim")
+## Install development version of 'samplesim' ----
+remotes::install_github("ahasverus/samplesim")
 ```
 
-### Reference
+Then you can attach the package `samplesim`:
 
-Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A. and Yoccoz N.G. How many is enough? An R package for evaluating the effect of sample size on estimates and precision of stable isotope mixing solutions. _Methods in Ecology and Evolution_, submitted.
+``` r
+library("samplesim")
+```
+
+## Overview
+
+Please read the
+[Vignette](https://ahasverus.github.io/samplesim/articles/samplesim.html)
+
+## Citation
+
+Please cite this package as:
+
+> Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A. & Yoccoz
+> N.G. How many is enough? An R package for evaluating the effect of
+> sample size on estimates and precision of stable isotope mixing
+> solutions. Submitted to *Methods in Ecology and Evolution*.
+
+Or alternatively:
+
+> Casajus N., Lecomte N. & Ehrich D. (2021) samplesim: An R package to
+> investigate sample size effects in stable isotope mixing solutions. R
+> package version 0.1. URL: <https://github.com/ahasverus/samplesim>.
+
+## Code of Conduct
+
+Please note that the `samplesim` project is released with a [Contributor
+Code of
+Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
