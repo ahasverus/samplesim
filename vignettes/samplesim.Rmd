@@ -1,623 +1,649 @@
 ---
-title: "samplesim: an R package for estimating sample size effects in stable isotope mixing solutions"
-author: "Nicolas Casajus, Nicolas Lecomte and Dorothee Ehrich"
-date: "`r Sys.Date()`"
-lang: french
-output:
-  rmarkdown::html_vignette:
-    toc: true
-    number_sections: true
+title: "Get started with samplesim"
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{An introduction of the package samplesim}
+  %\VignetteIndexEntry{Get started with samplesim}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-<!--
-
-### To build vignette (dev - remove inst/doc before push)
-library(devtools)
-setwd("~/Documents/samplesim")
-devtools::build_vignettes()
-
-### To create PDF manual
-path <- find.package("samplesim")
-system(paste(shQuote(file.path(R.home("bin"), "R")), "CMD", "Rd2pdf", shQuote(path)))
-
--->
-
-
-<style type = "text/css">
-    body, p { line-height: 26px; font-size: 16px; }
-    #TOC ul li, #TOC ul li ul li { line-height: 24px; font-size: 16px; list-style-type: none; }
-    ul li, ul li ul li { list-style-type: disc; }
-    h1 { margin-top:50px; color: #338c8c; font-size: 28px;}
-    h2 { margin-top:25px; color: #338c8c; border-bottom-color: #338c8c; border-bottom-width: 2px; }
-    h4 { font-size: 16px; }
-    #TOC { margin-top: 25px; margin-bottom: 25px; }
-    pre, code { font-size: 13px; line-height: 20px; }
-    p { margin-top: 15px; }
-    a { color: #338c8c; }
-    p code, ul li code { color: #338c8c; font-weight: bold; }
-</style>
-
-
-
-<div style = "margin-top:50px;"></div>
-
-This package allows the investigation of the effect of sample size on estimates and precision of stable isotope mixing solutions calculated with the package [**siar**](https://cran.r-project.org/web/packages/siar/index.html) or the package [**MixSIAR**](https://cran.r-project.org/web/packages/MixSIAR/index.html). Samples sizes are modified assuming a normal distribution with a user defined mean and standard deviation. Samples of different sizes are created from this distribution, and mixing proportions are estimated for several replicates of each sample size using the function `siar::siarmcmcdirchletv4()` or the function `MixSIAR::run_model()`.
-
-
-# Package installation
-
-
-The **samplesim** package is hosted on the GitHub platform  ([github.com/ahasverus/samplesim](https://github.com/ahasverus/samplesim)). To install this package, you first need to install the **devtools** package from the CRAN. This package provides some useful functions such as the `install_github()` function which allows the installation of packages hosted in GitHub.
-
-
-```{r, eval = FALSE, echo = TRUE}
-# Install the < devtools > package
-install.packages("devtools", dependencies = TRUE)
-
-# Load the < devtools > package
-library(devtools)
-
-# Install the < samplesim > package from GitHub
-devtools::install_github("ahasverus/samplesim", build_vignettes = TRUE)
-
-# Load the < samplesim > package
-library(samplesim)
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse   = TRUE,
+  comment    = "#>",
+  fig.width  = 7,
+  fig.height = 7,
+  out.width  = "100%",
+  dpi        = 300
+)
 ```
 
-```{r, eval = TRUE, echo = FALSE}
-suppressMessages(library(samplesim))
+```{r 'setup', echo = FALSE}
+library("samplesim")
+library("ggplot2")
 ```
 
-
-Once the **samplesim** package is loaded in your working environment, you can type some useful command lines to get started.
-
-
-```{r, eval = FALSE, echo = TRUE}
-# List the content (objects and functions) of the < samplesim > package
-ls("package:samplesim")
-
-# Open the < samplesim > package home page
-help(package = "samplesim")
-
-# Open the help file of a specific function
-help(plot_samplesim)
-
-# Open the vignette (current document)
-browseVignettes(package = "samplesim")
-```
+This package allows the investigation of the effect of sample size on estimates 
+and precision of stable isotope mixing solutions calculated with the package 
+[**siar**](https://cran.r-project.org/web/packages/siar/index.html) or the 
+package [**MixSIAR**](https://cran.r-project.org/web/packages/MixSIAR/index.html). 
+Samples sizes are modified assuming a normal distribution with a user defined 
+mean and standard deviation. Samples of different sizes are created from this 
+distribution, and mixing proportions are estimated for several replicates of 
+each sample size using the function `siar::siarmcmcdirchletv4()` or the 
+function `MixSIAR::run_model()`.
 
 
-# Data description
 
-Let's take a look at the data requirements. **samplesim** needs three types of data:
+## Data description
 
-- the isotopic plasma values of the consumers
-- the isotopic plasma values of the preys (also called sources)
-- the trophic discrimination factors
+
+
+Let's take a look at the data requirements. `samplesim` needs three types of data:
+
+- the isotopic plasma values of the consumers;
+- the isotopic plasma values of the preys (also called sources);
+- the trophic discrimination factors.
 
 Datasets provided in this package come from Killengreen _et al._ (2011)[^1]
 
-[^1]: Killengreen S., Lecomte N., Ehrich D., Schott T., Yoccoz N.G. and Ims R.A. (2011) The importance of marine vs. human-induced subsidies in the maintenance of an expanding mesocarnivore in the arctic tundra. _Journal of Animal Ecology_, **80**, 1049-1060.
+[^1]: Killengreen S., Lecomte N., Ehrich D., Schott T., Yoccoz N.G. and Ims R.A. (2011) 
+The importance of marine vs. human-induced subsidies in the maintenance of an expanding 
+mesocarnivore in the arctic tundra. _Journal of Animal Ecology_, **80**, 1049-1060.
 
-To use these datasets with **samplesim** we will use the functions `load_mix_data()`, `load_source_data()` and `load_discr_data()` of the package **MixSIAR** to import and format the data.
+To use these datasets with `samplesim` we will use the functions 
+`MixSIAR::load_mix_data()`, `MixSIAR::load_source_data()` and 
+`MixSIAR::load_discr_data()` to import and format the data.
 
-## Consumers data {#consumers}
 
-This dataset contains the isotopic plasma values of the consumers over two (or more) isotopes. It must be structured in a data frame with two (or more) variables. Each column contains the isotopic plasma values of one isotope. In the example provided, this dataset contains two columns:
+
+### Consumers data {#consumers}
+
+
+
+This dataset contains the isotopic plasma values of the consumers over two 
+(or more) isotopes. It must be structured in a data frame with two (or more) 
+variables. Each column contains the isotopic plasma values of one isotope. In 
+the example provided, this dataset contains two columns:
 
 - `d13C`, describing the plasma values of the d13C isotope
 - `d15N`, describing the plasma values of the d15N isotope
 
-Each row of the data frame corresponds to one consumer. Let's take a look at the dataset available in the **samplesim** package by importing data with the **MixSIAR** function `load_mix_data()`.
+Each row of the data frame corresponds to one consumer. Let's take a look at the 
+dataset available in the `samplesim` package by importing data with the 
+`MixSIAR::load_mix_data()` function.
 
-```{r, eval = TRUE, echo = FALSE}
-# Get the location of the dataset
-mix.filename <- "data/foxes_consumer.csv"
 
-# Import isotopic plasma values of the consumers
-consumer <- MixSIAR::load_mix_data(
-  filename     = mix.filename,
-  iso_names    = c("d13C", "d15N"),
-  factors      = NULL,
-  fac_random   = NULL,
-  fac_nested   = NULL,
-  cont_effects = NULL
-)
-```
-
-```{r, eval = FALSE, echo = TRUE}
-# Get the location of the dataset
-mix.filename <- system.file(
-  path    = "external",
-  file    = "foxes_consumer.csv",
-  package = "samplesim"
-)
-
-# Import isotopic plasma values of the consumers
-consumer <- MixSIAR::load_mix_data(
-  filename     = mix.filename,
-  iso_names    = c("d13C", "d15N"),
-  factors      = NULL,
-  fac_random   = NULL,
-  fac_nested   = NULL,
-  cont_effects = NULL
-)
-```
-
-- **Important:** Currently **samplesim** is not develop to deal with random factors or continuous covariate.
 
 ```{r, eval = TRUE, echo = TRUE}
-# Get the class of the object
-class(consumer)
+## Get the location of the dataset ----
+file_path <- system.file("extdata", "foxes_consumer.csv", package = "samplesim")
 
-# Name of the list elements
-names(consumer)
-
-# Print the ten first rows of the isotopic values
-head(consumer$data_iso, 10)
-
-# Get the name of the isotopes
-consumer$iso_names
-
-# How many consumers are there in the dataset?
-consumer$N
+## Import isotopic plasma values of the consumers ----
+consumer <- MixSIAR::load_mix_data(filename     = file_path,
+                                   iso_names    = c("d13C", "d15N"),
+                                   factors      = NULL,
+                                   fac_random   = NULL,
+                                   fac_nested   = NULL,
+                                   cont_effects = NULL)
 ```
 
-For further details on the function `load_mix_data()` the reader is referred to the help page of this function (`?MixSIAR::load_mix_data`).
+**Important:** currently `samplesim` is not develop to deal with random factors 
+or continuous covariate.
 
 
 
-## Sources data {#sources}
+<br />
 
-This dataset contains the isotopic plasma values of the sources over two (or more) isotopes. It must be structured in one of two following formats:
+Let's explore this dataset.
+
+```{r, eval = TRUE, echo = TRUE}
+## Get the class of the object ----
+class(consumer)
+
+## Name of the list elements ----
+names(consumer)
+
+## Print the ten first rows of the isotopic values ----
+head(consumer$"data_iso", 10)
+
+## Get the name of the isotopes ----
+consumer$"iso_names"
+
+## How many consumers are there in the dataset? ----
+consumer$"N"
+```
+
+
+
+<br />
+
+For further details on the function `MixSIAR::load_mix_data()` the reader is 
+referred to the help page of this function.
+
+
+
+### Sources data {#sources}
+
+
+
+This dataset contains the isotopic plasma values of the sources over two 
+(or more) isotopes. It must be structured in one of two following formats:
 
 _**Format \#1**_
 
-A data frame with repeated measurements of plasma isotope (columns) for each source individual (row). In the example provided in **samplesim**, this dataset contains three columns:
+A data frame with repeated measurements of plasma isotope (columns) for each 
+source individual (row). In the example provided in `samplesim`, this dataset 
+contains three columns:
 
-  - `Source`, the name of the sources
-  - `d13C`, the plasma values of the d13C isotope
-  - `d15N`, the plasma values of the d15N isotope
+- `Source`: the name of the sources;
+- `d13C`: the plasma values of the d13C isotope;
+- `d15N`: the plasma values of the d15N isotope.
 
 _**Format \#2**_
 
-A data frame expressing isotopic plasma values as means and standard deviation. This dataset also contains the sample size of each source. In the example provided in **samplesim**, this dataset contains six columns:
+A data frame expressing isotopic plasma values as means and standard deviation. 
+This dataset also contains the sample size of each source. In the example 
+provided in `samplesim`, this dataset contains six columns:
 
-  - `Sources`, the name of the sources
-  - `Meand13C`, the mean values of the d13C isotope
-  - `SDd13C`, the standard deviation of the d13C isotope
-  - `Meand15N`, the mean values of the d15N isotope
-  - `SDd15N`, the standard deviation of the d15N isotope
-  - `n`, the sample size of each source
+- `Sources`: the name of the sources;
+- `Meand13C`: the mean values of the d13C isotope;
+- `SDd13C`: the standard deviation of the d13C isotope;
+- `Meand15N`: the mean values of the d15N isotope;
+- `SDd15N`: the standard deviation of the d15N isotope;
+- `n`: the sample size of each source.
 
-Let's take a look at the dataset available in the **samplesim** package by importing data with the **MixSIAR** function `load_source_data()`.
+<br />
 
-```{r, eval = TRUE, echo = FALSE}
-# Get the location of the dataset
-sources.filename <- "data/foxes_sources.csv"
-
-# Import mean isotopic plasma values of the sources (Format #1)
-sources <- load_source_data(
-  filename       = sources.filename,
-  source_factors = NULL,
-  conc_dep       = FALSE,
-  data_type      = "means",
-  mix            = consumer
-)
-```
-
-```{r, eval = FALSE, echo = TRUE}
-# Get the location of the dataset
-sources.filename <- system.file(
-  path    = "external",
-  file    = "foxes_sources.csv",
-  package = "samplesim"
-)
-
-# Import mean isotopic plasma values of the sources (Format #1)
-sources <- load_source_data(
-  filename       = sources.filename,
-  source_factors = NULL,
-  conc_dep       = FALSE,
-  data_type      = "means",
-  mix            = consumer
-)
-```
-
-If your data follow the format \#2, replace the value of the argument `data_type` by `raw`.
+Let's take a look at the dataset available in the `samplesim` package by 
+importing data with the function `MixSIAR::load_source_data()`.
 
 ```{r, eval = TRUE, echo = TRUE}
-# Get the class of the object
+## Get the location of the dataset ----
+file_path <- system.file("extdata", "foxes_sources.csv", package = "samplesim")
+
+## Import mean isotopic plasma values of the sources (Format #1) ----
+sources <- MixSIAR::load_source_data(filename       = file_path,
+                                     source_factors = NULL,
+                                     conc_dep       = FALSE,
+                                     data_type      = "means",
+                                     mix            = consumer)
+```
+
+**Note**: If your data follow the format \#2, replace the value of the argument 
+`data_type` by `raw`.
+
+
+
+<br />
+
+
+Let's explore this dataset.
+
+```{r, eval = TRUE, echo = TRUE}
+## Get the class of the object ----
 class(sources)
 
-# Name of the list elements
+## Name of the list elements ----
 names(sources)
 
-# Print the mean values of isotopic plasma values
-sources$S_MU
+## Print the mean values of isotopic plasma values ----
+sources$"S_MU"
 
-# Print the SD values of isotopic plasma values
-sources$S_SIG
+## Print the SD values of isotopic plasma values ----
+sources$"S_SIG"
 
-# Get the name of the sources
-sources$source_names
+## Get the name of the sources ----
+sources$"source_names"
 
-# How many sources are there in the dataset?
-sources$n_array
+## How many sources are there in the dataset? ----
+sources$"n_array"
 ```
 
-For further details on the function `load_source_data()` the reader is referred to the help page of this function (`?MixSIAR::load_source_data`).
+For further details on the function `MixSIAR::load_source_data()` the reader is 
+referred to the help page of this function.
 
-## Discrimation data {#discrim}
 
-This dataset contains the trophic discrimination factor (TDF) of two (or more) isotopes for each source. It must be structured following the format \#2 of the sources dataset. In the example provided in **samplesim**, this dataset contains five columns:
 
-A data frame expressing isotopic plasma values as means and standard deviation. This dataset also contains the sample size of each source. In the example provided in **samplesim**, this dataset contains six columns:
+### Discrimation data {#discrim}
 
-  - `Sources`, the name of the sources
-  - `Meand13C`, the mean values of the TDF for the d13C isotope
-  - `SDd13C`, the standard deviation of the TDF for the d13C isotope
-  - `Meand15N`, the mean values of the TDF for the d15N isotope
-  - `SDd15N`, the standard deviation of the TDF for the d15N isotope
 
-Let's take a look at the dataset available in the **samplesim** package by importing data with the **MixSIAR** function `load_discr_data()`.
 
-```{r, eval = TRUE, echo = FALSE}
-# Get the location of the dataset
-discr.filename <- "data/foxes_discrimination.csv"
+This dataset contains the trophic discrimination factor (TDF) of two (or more) 
+isotopes for each source. It must be structured following the format \#2 of the 
+sources dataset. In the example provided in `samplesim`, this dataset contains 
+five columns:
 
-# Import TDF values
-discr <- load_discr_data(
-  filename       = discr.filename,
-  mix            = consumer
-)
-```
+- `Sources`: the name of the sources;
+- `Meand13C`: the mean values of the TDF for the d13C isotope;
+- `SDd13C`: the standard deviation of the TDF for the d13C isotope;
+- `Meand15N`: the mean values of the TDF for the d15N isotope;
+- `SDd15N`: the standard deviation of the TDF for the d15N isotope.
 
-```{r, eval = FALSE, echo = TRUE}
-# Get the location of the dataset
-discr.filename <- system.file(
-  path    = "external",
-  file    = "foxes_discrimination.csv",
-  package = "samplesim"
-)
-
-# Import TDF values
-discr <- load_discr_data(
-  filename       = discr.filename,
-  mix            = consumer
-)
-```
+Let's take a look at the dataset available in the `samplesim` package by 
+importing data with the function `MixSIAR::load_discr_data()`.
 
 ```{r, eval = TRUE, echo = TRUE}
-# Get the class of the object
-class(discr)
+## Get the location of the dataset ----
+file_path <- system.file("extdata", "foxes_discrimination.csv", package = "samplesim")
 
-# Name of the list elements
-names(discr)
-
-# Print the mean values of TDF
-discr$mu
-
-# Print the SD values of TDF
-discr$sig2
+## Import TDF values ----
+discr <- MixSIAR::load_discr_data(filename = file_path, mix = consumer)
 ```
 
-For further details on the function `load_discr_data()` the reader is referred to the help page of this function (`?MixSIAR::load_discr_data`).
+<br />
+
+Let's explore this dataset.
+
+```{r, eval = TRUE, echo = TRUE}
+## Get the class of the object ----
+class(discr)
+
+## Name of the list elements ----
+names(discr)
+
+## Print the mean values of TDF ----
+discr$"mu"
+
+## Print the SD values of TDF ----
+discr$"sig2"
+```
+
+For further details on the function `MixSIAR::load_discr_data()` the reader is 
+referred to the help page of this function.
 
 
-# Data visualization
 
-The **samplesim** function `plot_isospace()` represents consumer and sources data in the isotopic space. This function is an adaptation of `MixSIAR::plot_data()` function and add color to source data. If you want you can export plot in PDF and/or PNG format.
+## Data visualization
+
+
+
+The function `samplesim::plot_isospace()` represents consumer and sources data 
+in the isotopic space. This function is an adaptation of `MixSIAR::plot_data()` 
+function and add color to source data. If you want you can export plot in PDF 
+and/or PNG format.
 
 
 ```{r, echo = TRUE, eval = TRUE, fig.width = 5, fig.height = 5}
-# Plot data in the isotopic space (samplesim function)
-samplesim::plot_isospace(
-  filename      = "isospace_samplesim",
-  plot_save_pdf = FALSE,
-  plot_save_png = FALSE,
-  mix           = consumer,
-  source        = sources,
-  discr         = discr
-)
+samplesim::plot_isospace(mix = consumer, source = sources, discr = discr)
 ```
 
-If you prefer you can also used the `MixSIAR::plot_data()`. If your data make sense, let's move forward!
+If you prefer you can also used the `MixSIAR::plot_data()`. 
+
+If your data make sense, let's move forward!
 
 
 
-# Running samplesim
+## Running samplesim
 
-The core function of **samplesim** is `samplesim()`. It allows investigating the effect of sample size on estimates and precision of stable isotope mixing solutions. More specifically `samplesim()` assesses the sensitivity of isotopes mixing models to variation in numbers of samples from source tissues. This tool can be used prior to full-blown studies in a similar manner than power analyses. It used the function `siar::siarmcmcdirichletv4()` developed by Andrew Parnell and available in the package **siar**. **samplesim** can also be used with the package **MixSIAR** developed by Brian Stock et al. User can choose to sample one particular source, or all the sources. User can also choose to modify consumer data. Sample sizes are modified assuming a normal distribution with a user defined mean and standard deviation. Samples of different sizes are created from this distribution, and mixing proportions are estimated for several replicates of each sample size.
 
-The general writing of `samplesim()` is:
+
+The core function of the package is `samplesim::samplesim()`. It allows 
+investigating the effect of sample size on estimates and precision of stable 
+isotope mixing solutions. More specifically `samplesim::samplesim()` assesses 
+the sensitivity of isotopes mixing models to variation in numbers of samples 
+from source tissues. This tool can be used prior to full-blown studies in a 
+similar manner than power analyses. It used the function 
+`siar::siarmcmcdirichletv4()` developed by Andrew Parnell and available in the 
+package **siar**. `samplesim` can also be used with the package **MixSIAR** 
+developed by Brian Stock _et al._. User can choose to sample one particular 
+source, or all the sources. User can also choose to modify consumer data.
+Sample sizes are modified assuming a normal distribution with a user defined 
+mean and standard deviation. Samples of different sizes are created from this 
+distribution, and mixing proportions are estimated for several replicates of 
+each sample size.
+
+
+
+<br />
+
+
+
+The general writing of `samplesim::samplesim()` is:
 
 ```{r, eval = FALSE, echo = TRUE}
-samplesim(
-  package     = "siar",
-  mix         = consumer,
-  source      = sources,
-  discr       = discr,
-  type        = NULL,
-  nsamples    = NULL,
-  modify      = NULL,
-  nrep        = 100,
-  interval    = 90,
-  name        = NULL,
-  resid_err   = TRUE,
-  process_err = FALSE,
-  run         = "test",
-  alpha.prior = 1
-)
+samplesim::samplesim(package     = "siar",
+                     mix         = consumer,
+                     source      = sources,
+                     discr       = discr,
+                     type        = NULL,
+                     nsamples    = NULL,
+                     modify      = NULL,
+                     nrep        = 100,
+                     interval    = 90,
+                     name        = NULL,
+                     resid_err   = TRUE,
+                     process_err = FALSE,
+                     run         = "test",
+                     alpha.prior = 1,
+                     path        = ".")
 ```
 
 with:
 
-- `package`, the package name to be used to estimate mixing proportions. Must be one of _siar_ or _mixsiar_.
-- `mix`, the output returned by the `MixSIAR::load_mix_data()` function and containing consumer isotope values ([see Consumers data section](#consumers)).
-- `source`, the output returned by the `MixSIAR::load_source_data()` function and containing mean and standard deviation isotope values of sources (and in some case raw values; [see Preys data section](#sources)).
-- `discr`, the output returned by the `MixSIAR::load_discr_data()` function and containing TDF values ([see Discrimation data section](#discrim)).
-- `type`, the type of analysis to be run. Must be one of `one source`, `all sources` or `consumer`.
+- `package`, the package name to be used to estimate mixing proportions. 
+Must be one of `'siar'` or `'mixsiar'`.
+- `mix`, the output returned by the `MixSIAR::load_mix_data()` function and 
+containing consumer isotope values ([see Consumers data section](#consumers)).
+- `source`, the output returned by the `MixSIAR::load_source_data()` function 
+and containing mean and standard deviation isotope values of sources (and in 
+some case raw values; [see Preys data section](#sources)).
+- `discr`, the output returned by the `MixSIAR::load_discr_data()` function and 
+containing TDF values ([see Discrimation data section](#discrim)).
+- `type`, the type of analysis to be run. Must be one of `'one source'`, 
+`'all sources'` or `'consumer'`.
 - `nsamples`, a vector with the sample sizes to simulate.
-- `modify`, the name of the source to modify (case sensitive). This argument has to be specified when the argument `type` is set to _one source_. Otherwise it will be ignored.
-- `nrep`, an integer specifying the number of replicates for each sample sizes. Default is 100.
-- `interval`, an integer indicating the width of credible interval to use for precision estimation. Default is 90.
-- `name`, a character string giving the name of the simulation. If NULL the simulation will be named by the time of the simulation. This name will be used to create a directory in which results will be stored.
-- `resid_err`, boolean indicating if residual error is included in the model. See `?MixSIAR::run_model` for further informations. Only necessary if `package = mixsiar`.
-- `process_err`, boolean indicating if process error is included in the model. See `?MixSIAR::run_model` for further informations. Only necessary if `package = mixsiar`.
-- `run`, string or list specifying MCMC parameters. See `?MixSIAR::run_model` for further informations. Only necessary if `package = mixsiar`.
-- `alpha.prior`, a numeric giving the Dirichlet prior on p.global. See `?MixSIAR::run_model` for further informations. Only necessary if `package = mixsiar`.
+- `modify`, the name of the source to modify (case sensitive). This argument 
+has to be specified when the argument `type = 'one source'`. Otherwise 
+it will be ignored.
+- `nrep`, an integer specifying the number of replicates for each sample sizes. 
+Default is `100`.
+- `interval`, an integer indicating the width of credible interval to use for 
+precision estimation. Default is `90`.
+- `name`, a character string giving the name of the simulation. If `NULL` the 
+simulation will be named by the time of the simulation. This name will be used 
+to create a directory (in `path`) in which results will be stored.
+- `resid_err`, a boolean indicating if residual error is included in the model. 
+See `?MixSIAR::run_model` for further information. 
+Only necessary if `package = 'mixsiar'`.
+- `process_err`, a boolean indicating if process error is included in the model. 
+See `?MixSIAR::run_model` for further information. 
+Only necessary if `package = 'mixsiar'`.
+- `run`, a string or a list specifying MCMC parameters. See `?MixSIAR::run_model` 
+for further information. Only necessary if `package = 'mixsiar'`.
+- `alpha.prior`, a numeric giving the Dirichlet prior on p.global. See 
+`?MixSIAR::run_model` for further information. Only necessary 
+if `package = 'mixsiar'`.
+- `path`, the directory in which the directory `name` will be created.
 
 
-Let's take an example. We will assess the impact of the sample size of one source: the source \#6 (_Voles_) with several sample sizes (from 2 to 500). The analysis will be repeated 999 times.
+Let's take an example. We will assess the impact of the sample size of 
+one source: the source \#6 (_Voles_) with several sample sizes (from 2 to 500). 
+The analysis will be repeated 999 times.
 
 ```{r, eval = FALSE, echo = TRUE, message = FALSE}
-# samplesim run for one source
-samplesim(
-  package     = "siar",
-  mix         = consumer,
-  source      = sources,
-  discr       = discr,
-  type        = "one source",
-  nsamples    = c(2:10, 15, 25, 50, 75, 100, 150, 250, 500),
-  modify      = "Voles",
-  nrep        = 999,
-  interval    = 90,
-  name        = "test_siar",
-  resid_err   = TRUE,
-  process_err = FALSE,
-  run         = "test",
-  alpha.prior = 1
-)
+## samplesim run for one source ----
+samplesim::samplesim(package     = "siar",
+                     mix         = consumer,
+                     source      = sources,
+                     discr       = discr,
+                     type        = "one source",
+                     nsamples    = c(2:10, 15, 25, 50, 75, 100, 150, 250, 500),
+                     modify      = "Voles",
+                     nrep        = 999,
+                     interval    = 90,
+                     name        = "test_siar",
+                     resid_err   = TRUE,
+                     process_err = FALSE,
+                     run         = "test",
+                     alpha.prior = 1,
+                     path        = ".")
 ```
 
-This function does not return any object in the R console. Instead, results are stored in the directory `test_siar/` and they will need to be imported for results visualization ([see below section](#results)).
+This function does not return any object in the R console. Instead, results are 
+stored in the directory `./test_siar/` and they will need to be imported for 
+results visualization ([see below](#results)).
 
-- **Note 1:** if you want to estimate sample size impacts of all sources, you need to set `type = "all source"`. If you want to assess the impact of the sample size of consumers, you have to set `type = "consumer"`.
+**Note 1:** if you want to estimate sample size impacts of all sources, you 
+need to set `type = "all source"`. If you want to assess the impact of the 
+sample size of consumers, you have to set `type = "consumer"`.
 
-- **Note 2:** the use of **samplesim** with the package **MixSIAR** requires the installation of the software JAGS. See the **MixSIAR** documentation for further details (`?MixSIAR`).
+**Note 2:** the use of `samplesim` with the package `MixSIAR` requires the 
+installation of the software **JAGS**. See the `MixSIAR` documentation for 
+further details.
 
-# Results extraction {#results}
 
-The `samplesim()` function has stored four objects results.
 
-```{r, eval = TRUE, echo = TRUE}
-# Content of the new directory (results)
-dir("test_siar")
+## Results extraction {#results}
+
+
+
+The `samplesim::samplesim()` function has stored four objects results.
+
+```{r, eval = FALSE, echo = TRUE}
+## Objects created by samplesim ----
+list.files("./test_siar")
 ```
 
-- `intervals`, a four dimensions array with the upper and lower bounds of the credible interval for each sample size, replicate and source. First dimension represents lower and upper bounds; second dimension corresponds to the number of sources; third dimension is the number of replicates; and fourth dimension is the number of sample size.
+```{r, eval = TRUE, echo = FALSE}
+list.files("docs/test_siar")
+```
 
-- `widths`, a three dimensions array with the width (precision) of credible intervals for each source, each replicate and each sample size. First dimension corresponds to the number of replicates; second dimension is the number of sources; and third dimension represents the number of sample size.
 
-- `medians`, a three dimensions array with the median (estimate) of credible intervals for each source, each replicate and each sample size. Dimensions are the same as for `widths` object.
+- `intervals`, a four dimensions array with the upper and lower bounds of the 
+credible interval for each sample size, replicate and source. First dimension 
+represents lower and upper bounds; second dimension corresponds to the number 
+of sources; third dimension is the number of replicates; and fourth dimension 
+is the number of sample size.
+
+- `widths`, a three dimensions array with the width (precision) of credible 
+intervals for each source, each replicate and each sample size. First dimension 
+corresponds to the number of replicates; second dimension is the number of 
+sources; and third dimension represents the number of sample size.
+
+- `medians`, a three dimensions array with the median (estimate) of credible 
+intervals for each source, each replicate and each sample size. Dimensions are 
+the same as for `widths` object.
 
 - `datasets`, a four dimensions array with all resampled datasets.
 
-A `logfile` is also written and contains all parameters of the simulation. Here's what it looks like.
+A `logfile.txt` is also written and contains all parameters of the simulation. 
+Here's what it looks like.
 
 ```{r, echo = FALSE, eval = TRUE}
-# Read the logfile
-log <- readLines("test_siar/logfile.txt")
-cat(paste0(log, collapse = "\n"))
+cat(paste0(readLines("docs/test_siar/logfile.txt"), collapse = "\n"))
 ```
 
 
-Now, let's take a look at the results by importing the `medians` dataset using the R function `readRDS()`.
 
-```{r, echo = TRUE, eval = TRUE}
+<br />
+
+
+
+Now, let's take a look at the results by importing the `medians` dataset using 
+the R function `readRDS()`.
+
+```{r, echo = TRUE, eval = FALSE}
+## Import medians of credible intervals ----
+medians <- readRDS("./test_siar/medians.rds")
+```
+
+```{r, echo = FALSE, eval = TRUE}
 # Import medians of credible intervals
-medians <- readRDS("test_siar/medians.rds")
+medians <- readRDS("docs/test_siar/medians.rds")
 ```
 
+
 ```{r, echo = TRUE, eval = TRUE}
-# Structure of the object
+## Structure of the object ----
 class(medians)
 
-# Names of the dimensions
+## Names of the dimensions ----
 names(dimnames(medians))
 
-# Names of the content of the second dimension
+## Names of the content of the second dimension ----
 dimnames(medians)[[2]]
 
-# Names of the content of the third dimension
+## Names of the content of the third dimension ----
 dimnames(medians)[[3]]
 ```
 
 These data are structured in a three dimensions array.
 
 ```{r, echo = TRUE, eval = TRUE}
-# Extract results of the first replicate
+## Extract results of the first replicate ----
 medians[1, , ]
 
-# Compute mean over replicates
+## Compute mean over replicates ----
 apply(medians, 3:2, mean)
 ```
 
 The structure of the `widths` dataset is the same as for `medians`.
 
-If you are uncomfortable to deal with three dimensions arrays, you can use the function `get_output()` of the **samplesim** package. This function converts these two arrays (i.e. `medians` and `widths`) into an unique data frame. For instance:
+
+
+<br />
+
+
+
+If you are uncomfortable to deal with three dimensions arrays, you can use the 
+function `samplesim::get_output()`. This function converts these two arrays 
+(i.e. `medians` and `widths`) into an unique data frame. For instance:
+
+```{r, echo = TRUE, eval = FALSE}
+## Import medians and widths of credible intervals ----
+datas <- samplesim::get_output("test_siar")
+```
+
+```{r, echo = FALSE, eval = TRUE}
+datas <- samplesim::get_output("test_siar", path = "docs")
+```
 
 ```{r, echo = TRUE, eval = TRUE}
-# Import medians and widths of credible intervals
-datas <- samplesim::get_output("test_siar")
-
-# Structure of the data frame
+## Structure of the data frame ----
 str(datas)
 
-# Print the first ten and last ten rows
+## Print the first ten and last ten rows ----
 rbind(head(datas, 10), tail(datas, 10))
 ```
 
 If you want to select only the `widths` data,
 
 ```{r, echo = TRUE, eval = TRUE}
-# Extract widths of credible intervals
+## Extract widths of credible intervals ----
 widths <- datas[datas$type == "Width of credible intervals", ]
 
-# Check
+## Check ----
 rbind(head(widths, 10), tail(widths, 10))
 ```
 
-The argument _change_ of the function `get_output()` allows to compute the percentage of change of medians and widths respectively, based on a reference value of sample size (argument _reference_; default is the minimum sample size). For instance,
+The argument `change` of the function `samplesim::get_output()` allows to 
+compute the percentage of change of medians and widths respectively, based on a 
+reference value of sample size (argument `reference`; default is the minimum 
+sample size). For instance,
+
+```{r, echo = TRUE, eval = FALSE}
+## Import medians and widths of credible intervals expressed as percentage of change ----
+datas <- samplesim::get_output(name = "test_siar", change = TRUE, reference = 2)
+```
+
+```{r, echo = FALSE, eval = TRUE}
+datas <- samplesim::get_output(name = "test_siar", change = TRUE, reference = 2, path = "docs")
+```
 
 ```{r, echo = TRUE, eval = TRUE}
-# Import medians and widths of credible intervals expressed as percentage of change
-datas <- samplesim::get_output(
-  name      = "test_siar",
-  change    = TRUE,
-  reference = 2
-)
-
-# Structure of the data frame
+## Structure of the data frame ----
 str(datas)
 
-# Print the first ten and last ten rows
+## Print the first ten and last ten rows ----
 rbind(head(datas, 10), tail(datas, 10))
 ```
 
-Here we notice that the column replicate is omitted and percentages of change are aggregated over replicates.
+Here we notice that the column replicate is omitted and percentages of change 
+are aggregated over replicates.
 
 
-# Results visualization
 
-The **samplesim** package also offers the possibility of visualizing the effect of sample size on the width of the credible interval and on the median of the posterior distribution of the mixing models. This is possible with the function `plot_samplesim()`.
+## Results visualization
 
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
-# Visualize results
+
+The `samplesim` package also offers the possibility of visualizing the effect 
+of sample size on the width of the credible interval and on the median of the 
+posterior distribution of the mixing models. This is possible with the function 
+`samplesim::plot_samplesim()`.
+
+
+```{r, echo = TRUE, eval = FALSE, fig.width = 8.5, fig.height = 5.5}
+## Visualize results ----
 samplesim::plot_samplesim(name = "test_siar")
 ```
 
+```{r, echo = FALSE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
+# Visualize results
+samplesim::plot_samplesim(name = "test_siar", path = "docs")
+```
+
+
+
+<br />
+
+
+
 If you prefer you can represent the percentages of change:
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
+```{r, echo = TRUE, eval = FALSE, fig.width = 8.5, fig.height = 5.5}
 # Visualize results expressed as percentages of change
-samplesim::plot_samplesim(
-  name      = "test_siar",
-  change    = TRUE,
-  reference = 2
-)
+samplesim::plot_samplesim(name = "test_siar", change = TRUE, reference = 2)
 ```
 
-Finally, if you are not satisfied with the quality of the graph, you can customize it by 1) importing data and 2) programming your own graph. Let's take an example with the [**ggplot2**](https://cran.r-project.org/web/packages/ggplot2/index.html) package (used in **samplesim**).
+```{r, echo = FALSE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
+samplesim::plot_samplesim(name = "test_siar", change = TRUE, reference = 2, path = "docs")
+```
 
-```{r, echo = TRUE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
-# Import medians and widths of credible intervals
+
+<br />
+
+
+Finally, if you are not satisfied with the quality of the graph, you can 
+customize it by 1) importing data and 2) programming your own graph. Let's take 
+an example with the 
+[**ggplot2**](https://cran.r-project.org/web/packages/ggplot2/index.html) 
+package (used in `samplesim`).
+
+```{r, echo = TRUE, eval = FALSE}
+## Import medians and widths of credible intervals ----
 datas <- get_output("test_siar")
-
-# Reminder #1
-head(datas)
-
-# Reminder #2
-tail(datas)
-
-# Graph
-ggplot(
-  aes(
-    x = size,
-    y = value
-  ),
-  data = datas
-) +
-geom_boxplot(
-  aes(
-    fill = source
-  ),
-  width         = 0.8,
-  outlier.shape = NA
-) +
-labs(
-  x    = "Sample size",
-  y    = "Values",
-  fill = "Sources"
-) +
-theme(
-  legend.position = "bottom"
-) +
-theme(
-  legend.title = element_blank()
-) +
-facet_grid(. ~ type)
 ```
 
-Or your can only represent the medians values. For instance (with percentages of change):
+```{r, echo = FALSE, eval = TRUE}
+datas <- get_output("test_siar", path = "docs")
+```
+
+```{r, echo = TRUE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
+ggplot(aes(x = size, y = value), data = datas) +
+  geom_boxplot(aes(fill = source), width = 0.8, outlier.shape = NA) +
+  labs(x = "Sample size", y = "Values", fill = "Sources") +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  facet_grid(. ~ type)
+```
+
+
+
+<br />
+
+
+
+Or your can only represent the medians values. For instance (with percentages of 
+change):
+
+
+```{r, echo = TRUE, eval = FALSE}
+## Import medians and widths of credible intervals ----
+datas <- samplesim::get_output(name = "test_siar", change = TRUE)
+```
+
+```{r, echo = FALSE, eval = TRUE}
+datas <- samplesim::get_output(name = "test_siar", change = TRUE, path = "docs")
+```
 
 
 ```{r, echo = TRUE, eval = TRUE, fig.width = 8.5, fig.height = 5.5}
-# Import medians and widths of credible intervals
-datas <- samplesim::get_output(
-  name   = "test_siar",
-  change = TRUE
-)
+## Select only medians of credible intervals ----
+medians <- datas[datas$"type" == "Median of posterior distribution", ]
 
-# Select medians of credible intervals
-medians <- datas[datas$type == "Median of posterior distribution", ]
-
-# Print data
-head(medians)
-
-# Graph
-ggplot(
-  aes(
-    x     = size,
-    y     = value,
-    group = source
-  ),
-  data = medians
-) +
-geom_point(
-  aes(
-    color = source
-  )
-) +
-geom_line(
-  aes(
-    color = source
-  )
-) +
-labs(
-  x     = "Sample size",
-  y     = "Change in medians (%)",
-  color = "Sources"
-) +
-theme_light() +
-theme(
-  legend.position = "bottom"
-) +
-theme(
-  legend.title = element_blank()
-)
+ggplot(aes(x = size, y = value, group = source), data = medians) +
+  geom_point(aes(color = source)) +
+  geom_line(aes(color = source)) +
+  labs(x = "Sample size", y = "Change in medians (%)", color = "Sources") +
+  theme_light() +
+  theme(legend.position = "bottom", legend.title = element_blank())
 ```
 
 
-# Reference {-}
+## Reference {-}
 
-Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A. and Yoccoz N.G. <span style = "color: #338c8c;">How many is enough? An R package for evaluating the effect of sample size on estimates and precision of stable isotope mixing solutions</span>. _Methods in Ecology and Evolution_, submitted.
-
-
-<div style = "margin-bottom:50px;"></div>
+Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A. and Yoccoz N.G. 
+How many is enough? An R package for evaluating the effect of sample size on 
+estimates and precision of stable isotope mixing solutions. 
+Submitted to _Methods in Ecology and Evolution_.
