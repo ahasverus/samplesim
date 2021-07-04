@@ -3,8 +3,8 @@ citHeader("To cite samplesim in publications use:")
 bibentry(
   bibtype = "Manual",
   title   = "samplesim: {An} {R} package to investigate sample size effects in stable isotope mixing solutions",
-  author  = c(person("Casajus N."), person("Lecomte N."), person("Ehrich D.")),
+  author  = c(person("Casajus N."), person("Cameron C."), person("Ehrich D."), person("Lecomte N.")),
   year    = "2021",
-  note    = "R package version 0.1",
+  note    = "R package version 1.0",
   url     = "https://github.com/ahasverus/samplesim"
 )

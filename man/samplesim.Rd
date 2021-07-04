@@ -126,7 +126,7 @@ replicates of each sample size with the function
 }
 }
 \references{
-Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A., Yoccoz N.G.
+Lecomte N., Ehrich D., Casajus N., Berteaux D., Cameron C., and Yoccoz N.G.
 How many is enough? An R package for evaluating the effect of sample size on
 estimates and precision of stable isotope mixing solutions.
 Submitted to \emph{Methods in Ecology and Evolution}.

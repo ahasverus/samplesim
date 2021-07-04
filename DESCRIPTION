@@ -1,6 +1,6 @@
 Package: samplesim
 Type: Package
-Version: 0.1
+Version: 1.0
 Title: Sample Size Effects in Stable Isotope Mixing Solutions
 Authors@R: c(
     person(
@@ -10,16 +10,21 @@ Authors@R: c(
       role    = c("aut", "cre", "cph"),
       comment = c(ORCID = "0000-0002-5537-5294")),
     person(
-      given   = "Nicolas",
-      family  = "Lecomte",
-      email   = "nicolas.lecomte@umoncton.ca",
-      role    = "aut",
-      comment = c(ORCID = "0000-0002-8473-5375")),
+      given   = "Cassandra",
+      family  = "Cameron",
+      email   = "cassandra.cameron@hotmail.com",
+      role    = "aut"),
     person(
       given   = "Dorothee",
       family  = "Ehrich",
       email   = "dorothee.ehrich@uit.no",
-      role    = "aut"))
+      role    = "aut"),
+    person(
+      given   = "Nicolas",
+      family  = "Lecomte",
+      email   = "nicolas.lecomte@umoncton.ca",
+      role    = "aut",
+      comment = c(ORCID = "0000-0002-8473-5375")))
 Description: Allows the investigation of the effect of sample size on estimates
     and precision of stable isotope mixing solutions calculated with the 
     package 'siar' (written by Andrew Parnell et al.) or the package 'MixSIAR' 

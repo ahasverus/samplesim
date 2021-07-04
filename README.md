@@ -61,16 +61,17 @@ Please read the
 
 Please cite this package as:
 
-> Lecomte N., Ehrich D., Casajus N., Berteaux D., Giroux M.-A. & Yoccoz
+> Lecomte N., Ehrich D., Casajus N., Berteaux D., Cameron C., and Yoccoz
 > N.G. How many is enough? An R package for evaluating the effect of
 > sample size on estimates and precision of stable isotope mixing
 > solutions. Submitted to *Methods in Ecology and Evolution*.
 
 Or alternatively:
 
-> Casajus N., Lecomte N. & Ehrich D. (2021) samplesim: An R package to
-> investigate sample size effects in stable isotope mixing solutions. R
-> package version 0.1. URL: <https://github.com/ahasverus/samplesim>.
+> Casajus N., Cameron C., Ehrich D., and Lecomte N. (2021) samplesim: An
+> R package to investigate sample size effects in stable isotope mixing
+> solutions. R package version 1.0. URL:
+> <https://github.com/ahasverus/samplesim>.
 
 ## Code of Conduct
 
